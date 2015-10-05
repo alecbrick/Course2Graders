@@ -24,6 +24,7 @@ COPY executeGrader.sh /grader/executeGrader.sh
 COPY mod1/* /grader/mod1/
 COPY document/* /grader/mod2/document/
 COPY mod3/part1/* /grader/mod3/part1/
+COPY mod3/part2/textgen/* /grader/mod3/part2/textgen/
 COPY grader.py /grader/grader.py
 
 RUN chmod a+rwx -R /grader/

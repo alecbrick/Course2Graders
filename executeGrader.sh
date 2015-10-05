@@ -6,6 +6,7 @@ cd /grader
 
 MOD2_PART2_ID="mEOEF"
 MOD3_PART1_ID="In7Bo"
+MOD3_PART2_ID="p6Yhk"
 
 while [ $# -gt 1 ]
   do
@@ -42,6 +43,12 @@ elif [ "$PARTID" == "$MOD3_PART1_ID" ]; then
   cd "$GRADER_DIRECTORY"
   python "$FILENAME"
   exit 0
+elif [ "$PARTID" == "$MOD3_PART2_ID" ]; then
+  GRADER_DIRECTORY=mod3/part2
+  FILENAME="textgen.MarkovTextGeneratorGrader"
+  cp /shared/submission/MarkovTextGeneratorLoL.java "$GRADER_DIRECTORY"/textgen
+  cd "$GRADER_DIRECTORY"
+  javac textgen/*.java
 else
   echo "No PartId matched!" 1>&2
   exit 1
@@ -52,6 +59,6 @@ if [ ! $? -eq 0 ]; then
   exit 0
 fi
 
-if [ "$PARTID" == "$MOD2_PART2_ID" ]; then
+if [ "$PARTID" == "$MOD2_PART2_ID" ] || [ "$PARTID" == "$MOD3_PART2_ID" ] ; then
   java "$FILENAME"
 fi
