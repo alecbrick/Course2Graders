@@ -50,7 +50,7 @@ elif [ "$PARTID" == "$MOD3_PART2_ID" ]; then
   cd "$GRADER_DIRECTORY"
   javac textgen/*.java
 else
-  echo "No PartId matched!" 1>&2
+  echo "{ \"fractionalScore\": 0.0, \"feedback\":\"No partID matched: "$PARTID"\" }"
   exit 1
 fi
 
@@ -59,6 +59,9 @@ if [ ! $? -eq 0 ]; then
   exit 0
 fi
 
-if [ "$PARTID" == "$MOD2_PART2_ID" ] || [ "$PARTID" == "$MOD3_PART2_ID" ] ; then
+if [ "$PARTID" == "$MOD2_PART2_ID" ] ; then
   java "$FILENAME"
+elif [ "$PARTID" == "$MOD3_PART2_ID" ] ; then
+  java "$FILENAME" > extra.out
+  cat output.out
 fi

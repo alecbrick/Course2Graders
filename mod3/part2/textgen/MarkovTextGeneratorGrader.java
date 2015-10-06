@@ -2,6 +2,7 @@ package textgen;
 
 import java.util.Random;
 import java.util.HashMap;
+import java.io.PrintWriter;
 
 public class MarkovTextGeneratorGrader {
     private static final int LENGTH = 500;
@@ -22,7 +23,7 @@ public class MarkovTextGeneratorGrader {
                 String s = gen.generateText(20);
             } catch (Exception e) {
                 incorrect++;
-                feedback = "Check that your program doesn't crash when the generator tries to generate text without being trained.\n";
+                feedback = "Check that your program doesn't crash when the generator tries to generate text without being trained; ";
             }
             tests++;
 
@@ -31,7 +32,7 @@ public class MarkovTextGeneratorGrader {
                 String s = gen.generateText(20);
             } catch (Exception e) {
                 incorrect++;
-                feedback += "Make sure that your program doesn't crash when generating text after being trained with an empty file.\n";
+                feedback += "Make sure that your program doesn't crash when generating text after being trained with an empty file; ";
             }
             tests++;
 
@@ -42,7 +43,7 @@ public class MarkovTextGeneratorGrader {
             String[] words = res.split("[\\s]+");
             if (res.split("[\\s]+").length != LENGTH) {
                 incorrect++;
-                feedback += "Your generator doesn't always produce the right amount of words.\n";
+                feedback += "Your generator doesn't always produce the right amount of words; ";
             }
             tests++;
 
@@ -59,14 +60,15 @@ public class MarkovTextGeneratorGrader {
 
             if (wordCounts.get("I") < LENGTH / 2) {
                 incorrect++;
-                feedback += "The expected word count of certain words isn't high enough.\n";
+                feedback += "The expected word count of certain words isn't high enough; ";
             }
             tests++;
 
             for (String w : input.split(" ")) {
                 if (!wordCounts.containsKey(w)) {
                     incorrect++;
-                    feedback += "Your generator doesn't produce every possible word.\n";
+                    feedback += "Your generator doesn't produce every possible word; ";
+                    break;
                 }
             }
             tests++;
@@ -75,7 +77,7 @@ public class MarkovTextGeneratorGrader {
                 if (words[i].equals("socks.")) {
                     if (i + 1 < words.length && !words[i + 1].equals("I")) {
                         incorrect++;
-                        feedback += "Make sure that the last word of the input file is always followed by the first.\n";
+                        feedback += "Make sure that the last word of the input file is always followed by the first; ";
                         break;
                     }
                 }
@@ -84,7 +86,7 @@ public class MarkovTextGeneratorGrader {
 
             if (!gen.generateText(0).equals("")) {
                 incorrect++;
-                feedback += "The text generator shouldn't produce anything when zero words are requested.\n";
+                feedback += "The text generator shouldn't produce anything when zero words are requested; ";
             }
             tests++;
 
@@ -100,7 +102,7 @@ public class MarkovTextGeneratorGrader {
 
             if (i < LENGTH / 2) {
                 incorrect++;
-                feedback += "Make sure that train() doesn't remove the original word lists.";
+                feedback += "Make sure that train() doesn't remove the original word lists; ";
             }
             tests++;
 
@@ -108,7 +110,7 @@ public class MarkovTextGeneratorGrader {
             String s = gen.generateText(20);
             if(s.split("[\\s]+").length != 0) {
                 incorrect++;
-                feedback += "Ensure that retrain() removes the original word lists.";
+                feedback += "Ensure that retrain() removes the original word lists; ";
             }
             tests++;
 
@@ -116,7 +118,9 @@ public class MarkovTextGeneratorGrader {
                 feedback = "Congrats! You passed all the tests.";
             }
 
-            System.out.println(makeJson((double)(tests - incorrect) / tests, feedback));
+            PrintWriter f = new PrintWriter("output.out");
+            f.println(makeJson((double)(tests - incorrect) / tests, feedback));
+            f.close();
             return;
         } catch (Exception e) {
             System.out.println(makeJson(0.0, "Error during runtime: " + e));
