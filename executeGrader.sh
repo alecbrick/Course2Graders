@@ -5,7 +5,8 @@ export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
 cd /grader
 
 MOD2_PART2_ID="mEOEF"
-MOD3_PART1_ID="In7Bo"
+MOD3_PART1_1_ID="2xj63"
+MOD3_PART1_2_ID="In7Bo"
 MOD3_PART2_ID="p6Yhk"
 
 while [ $# -gt 1 ]
@@ -36,7 +37,13 @@ if [ "$PARTID" == "$MOD2_PART2_ID" ]; then
   cp * ../mod2/document/ 
   cd ../"$GRADER_DIRECTORY"
   javac -sourcepath document document/*.java
-elif [ "$PARTID" == "$MOD3_PART1_ID" ]; then
+elif [ "$PARTID" == "$MOD3_PART1_1_ID" ]; then
+  GRADER_DIRECTORY=mod3/part1
+  FILENAME="textgen.MyLinkedListGrader"
+  cp /shared/submission/MyLinkedList.java "$GRADER_DIRECTORY"/textgen
+  cd "$GRADER_DIRECTORY"
+  javac textgen/*.java
+elif [ "$PARTID" == "$MOD3_PART1_2_ID" ]; then
   GRADER_DIRECTORY=mod3/part1
   FILENAME="mod3part1.py"
   cp /shared/submission/MyLinkedListTester.java "$GRADER_DIRECTORY"/textgen
@@ -61,7 +68,7 @@ fi
 
 if [ "$PARTID" == "$MOD2_PART2_ID" ] ; then
   java "$FILENAME"
-elif [ "$PARTID" == "$MOD3_PART2_ID" ] ; then
+elif [ "$PARTID" == "$MOD3_PART2_ID" ] || [ "$PARTID" == "$MOD3_PART1_1_ID" ]; then
   java "$FILENAME" > extra.out
   cat output.out
 fi
