@@ -2,7 +2,6 @@ package textgen;
 
 import java.util.AbstractList;
 
-// Doesn't check for negative set
 
 /** A class that implements a doubly linked list
  * 
@@ -45,11 +44,12 @@ public class MyLinkedList<E> extends AbstractList<E> {
   
   // returns prev
   public E set(int index, E element) {
-	  if (index >= size)
+	  if (index < 0 || index >= size)
 	  {
 		  throw new IndexOutOfBoundsException("MyLinkedList: Index "+index+" is invalid. List size is "+size);
 	  }
-	  if(element == null) {
+	  if (element == null)
+	  {
 		  throw new NullPointerException("MyLinkedList: Null elements not permitted in List.");
 	  }
 	  LLNode<E> curr = getNode(index);
@@ -63,9 +63,20 @@ public class MyLinkedList<E> extends AbstractList<E> {
   }
   
   public void add(int index, E element ) {
+	  if (index < 0 || index > size)
+	  {
+		  throw new IndexOutOfBoundsException("MyLinkedList add: Index "+index+" is invalid. List size is "+size);
+	  }
+          if(element == null) {
+		  throw new NullPointerException("MyLinkedList: Null elements not permitted in List.");
+	  }
 	  LLNode<E> curr = getNode(index);
 	  new LLNode<E>(element, curr.prev);
 	  size++;
+  }
+  public boolean add(E element) {
+     this.add(this.size(), element);
+     return true;
   }
   
   public E remove(int index) {
@@ -111,4 +122,3 @@ class LLNode<E> {
 	}
 	
 }
-

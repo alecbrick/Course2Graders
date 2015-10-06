@@ -2,7 +2,7 @@ package textgen;
 
 import java.util.AbstractList;
 
-// On remove, next element's "prev" pointer is not updated
+// No check for upper bound on add
 
 /** A class that implements a doubly linked list
  * 
@@ -49,7 +49,8 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	  {
 		  throw new IndexOutOfBoundsException("MyLinkedList: Index "+index+" is invalid. List size is "+size);
 	  }
-	  if(element == null) {
+	  if (element == null)
+	  {
 		  throw new NullPointerException("MyLinkedList: Null elements not permitted in List.");
 	  }
 	  LLNode<E> curr = getNode(index);
@@ -63,9 +64,20 @@ public class MyLinkedList<E> extends AbstractList<E> {
   }
   
   public void add(int index, E element ) {
+	  if (index < 0)
+	  {
+		  throw new IndexOutOfBoundsException("MyLinkedList add: Index "+index+" is invalid. List size is "+size);
+	  }
+          if(element == null) {
+		  throw new NullPointerException("MyLinkedList: Null elements not permitted in List.");
+	  }
 	  LLNode<E> curr = getNode(index);
 	  new LLNode<E>(element, curr.prev);
 	  size++;
+  }
+  public boolean add(E element) {
+     this.add(this.size(), element);
+     return true;
   }
   
   public E remove(int index) {
@@ -74,6 +86,8 @@ public class MyLinkedList<E> extends AbstractList<E> {
 		  throw new IndexOutOfBoundsException("MyLinkedList: Index "+index+" is invalid. List size is "+size);
 	  }
 	  LLNode<E> curr = getNode(index);
+	  // fix next elements previous pointer
+	  curr.next.prev = curr.prev;
 	  
 	  // fix prev elements next pointer
 	  curr.prev.next = curr.next;
@@ -109,4 +123,3 @@ class LLNode<E> {
 	}
 	
 }
-
