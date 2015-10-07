@@ -3,6 +3,7 @@ package document;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 
 /** A class for timing the EfficientDocument and BasicDocument classes
  * 
@@ -18,7 +19,15 @@ public class DocumentBenchmarking {
 	
 	public static void main(String [] args) {
 		String s = "document/warAndPeace.txt";
-		
+                PrintWriter out;
+                try {
+                    out = new PrintWriter("output.out");
+		}
+                catch (Exception e) {
+                    e.printStackTrace();
+                    return;
+                }
+
 		int increment = 10000;
 		String test = null;
 		int numSteps = 20;
@@ -56,7 +65,8 @@ public class DocumentBenchmarking {
                                 seconds2 = ((double )endTime2 - startTime2) / 1000000000;
 
                                 if (seconds >= seconds2) {
-                                        System.out.println("{ \"fractionalScore\": 0.0, \"feedback\":\"Your BasicDocument is slower than your EfficientDocument.\" }");
+                                        out.println("{ \"fractionalScore\": 0.0, \"feedback\":\"Your BasicDocument is slower than your EfficientDocument.\" }");
+                                        out.close();
                                         return;
                                 }
             
@@ -64,10 +74,12 @@ public class DocumentBenchmarking {
                         }
                 }
                 catch (Exception e) {
-                        System.out.println("{ \"fractionalScore\": 0.0, \"feedback\":\"Your code produced a runtime error: " + e + ".\" }");
+                        out.println("{ \"fractionalScore\": 0.0, \"feedback\":\"Your code produced a runtime error: " + e + ".\" }");
+                        out.close();
                         return;
                 }
-                System.out.println("{ \"fractionalScore\": 1.0, \"feedback\":\"Correct answer.\" }");
+                out.println("{ \"fractionalScore\": 1.0, \"feedback\":\"You got it!\" }");
+                out.close();
 	}
 	
 	public static String getStringFromFile(String filename, int numChars) {
