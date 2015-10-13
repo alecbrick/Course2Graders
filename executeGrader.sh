@@ -10,6 +10,8 @@ MOD3_PART1_2_ID="In7Bo"
 MOD3_PART2_ID="p6Yhk"
 MOD4_PART1_ID="3YwBB"
 MOD4_PART2_ID="gjuKe"
+MOD5_PART1_ID="IEm7C"
+MOD5_PART2_ID="pmzXG"
 
 while [ $# -gt 1 ]
   do
@@ -70,6 +72,16 @@ elif [ "$PARTID" == "$MOD4_PART2_ID" ]; then
   GRADER_DIRECTORY=mod4/part2
   FILENAME="spelling.TrieGrader"
   cp /shared/submission/AutoCompleteDictionaryTrie.java "$GRADER_DIRECTORY"/spelling
+  cd "$GRADER_DIRECTORY"
+  javac spelling/*.java
+elif [ "$PARTID" == "$MOD5_PART1_ID" ] || [ "$PARTID" == "$MOD5_PART2_ID" ]; then
+  if [ "$PARTID" == "$MOD5_PART1_ID" ]; then
+    GRADER_DIRECTORY=mod5/part1
+  else
+    GRADER_DIRECTORY=mod5/part2
+  fi
+  FILENAME="spelling.NearbyWordsGrader"
+  cp /shared/submission/NearbyWords.java "$GRADER_DIRECTORY"/spelling
   cd "$GRADER_DIRECTORY"
   javac spelling/*.java
 else
