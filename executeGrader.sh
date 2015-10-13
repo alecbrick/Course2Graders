@@ -68,7 +68,7 @@ elif [ "$PARTID" == "$MOD4_PART1_ID" ]; then
   javac spelling/*.java
 elif [ "$PARTID" == "$MOD4_PART2_ID" ]; then
   GRADER_DIRECTORY=mod4/part2
-  FILENAME="spelling.AutoCompleteGrader"
+  FILENAME="spelling.TrieGrader"
   cp /shared/submission/AutoCompleteDictionaryTrie.java "$GRADER_DIRECTORY"/spelling
   cd "$GRADER_DIRECTORY"
   javac spelling/*.java
