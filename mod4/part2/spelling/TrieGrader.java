@@ -38,7 +38,7 @@ public class TrieGrader {
             g.testPredictions(ac);
 
         } catch (Exception e) {
-            out.println(g.makeJson(0.0, g.getFeedback() + "Error during runtime: " + e + "; "));
+            out.println(g.makeJson(0.0, g.getFeedback() + "Error during runtime: " + e ));
             out.close();
             return;
         }
