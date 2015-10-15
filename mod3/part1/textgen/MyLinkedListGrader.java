@@ -54,181 +54,241 @@ public class MyLinkedListGrader {
 		MyLinkedList<Integer> lst = new MyLinkedList<Integer>();
 		int nums[] = {1, 2, 3, 4, 5};
 		
+                feedback += "** Test #1: Adding to end of list...";
 		for (int i : nums) {
 			lst.add(i);
 		}
                 if (!printListForwards(lst).equals("12345")) {
-                        feedback += "Adding to end of list failed - list does not contain expected elements. ";
+                        feedback += "FAILED. Expected list to contain 12345, got " + printListForwards(lst) + ". ";
                         incorrect++;
+                }
+                else {
+                        feedback += "PASSED. ";
                 }
                 tests++;
 
+                feedback += "** Test #2: Getting from the middle...";
                 if (lst.get(3) != 4 && incorrect == 0) {
-                    feedback += "Get from middle failed. ";
+                    feedback += "FAILED. Fourth element was " + lst.get(3) + "; expected 4. ";
                     incorrect++;
+                }
+                else {
+                    feedback += "PASSED. ";
                 }
                 tests++; 
 		
 		lst.add(2, 6);
 		
+                feedback += "** Test #3: Adding to the middle...";
 		if (!printListForwards(lst).equals("126345")) {
-                    feedback += "Adding in the middle incorrect - make sure you correctly update your 'next' pointers. ";
+                    feedback += "FAILED. Expected 126345, got " + printListForwards(lst) + ". Make sure you correctly update your 'next' pointers. ";
                     incorrect++;
                 }
+                else {
+                    feedback += "PASSED. ";
+                }
+
+                feedback += "** Test #4: Testing 'prev' pointers...";
 		if (!printListBackwards(lst).equals("543621")) {
-                    feedback += "Adding in the middle incorrect - make sure you correctly update your 'prev' pointers. ";
+                    feedback += "FAILED. Expected 543621, got " + printListBackwards(lst) + ". Make sure you correctly update your 'prev' pointers. ";
                     incorrect++;
                 }
+                else {
+                    feedback += "PASSED. ";
+                }
+
+                feedback += "** Test #5: Testing list size...";
 		if (lst.size() != 6) {
-                    feedback += "Size incorrect after adding in the middle. ";
+                    feedback += "FAILED. Incorrect list size after adding in the middle. Expected list size of 6, got " + lst.size() + ". ";
                     incorrect++;
+                }
+                else {
+                    feedback += "PASSED. ";
                 }
                 tests += 3;
 		
 		lst.remove(2);
+                feedback += "** Test #6: Removing from the middle...";
 		if (!printListForwards(lst).equals("12345") && incorrect == 0) {
-                    feedback += "Removing from the middle incorrect - make sure you correctly update your 'next' pointers. ";
+                    feedback += "FAILED. Expected 12345, got " + printListForwards(lst) + ". Make sure you correctly update your 'next' pointers. ";
                     incorrect++;
                 }
-		if (!printListBackwards(lst).equals("54321") && incorrect <= 1) {
-                    feedback += "Removing from the middle incorrect - make sure you correctly update your 'prev' pointers. ";
+                else {
+                    feedback += "PASSED. ";
+                }
+                
+                feedback += "** Test #7: Testing 'prev' pointers on remove...";
+		if (!printListBackwards(lst).equals("54321")) {
+                    feedback += "FAILED. Expected 54321, got " + printListBackwards(lst) + ". Make sure you correctly update your 'prev' pointers. ";
                     incorrect++;
                 }
-		if (lst.size() != 5 && incorrect <= 2) {
-                    feedback += "Size incorrect after removing from the middle. ";
+                else {
+                    feedback += "PASSED. ";
+                }
+
+                feedback += "** Test #8: Testing size after remove...";
+		if (lst.size() != 5) {
+                    feedback += "FAILED. Expected list size of 5, got " + lst.size() + ". ";
                     incorrect++;
 		}
+                else {
+                    feedback += "PASSED. ";
+                }
                 tests += 3;
 
+                feedback += "** Test #9: Testing add, remove, and add on new list...";
 		lst = new MyLinkedList<Integer>();
 		lst.add(0, 1);
 		lst.remove(0);
 		lst.add(0, 1);
 		if (!printListForwards(lst).equals("1")) {
-                    feedback += "Add, remove, and add to empty list failed. ";
+                    feedback += "FAILED. Expected a list containing just 1, got " + printListForwards(lst) + ". ";
                     incorrect++;
                 }
+                else {
+                    feedback += "PASSED. ";
+                }
+
+                feedback += "** Test 10: Checking size after previous test...";
                 if (lst.size() != 1) {
-                    feedback += "Size of list after add, remove, and add to empty list is incorrect; check that you correctly update your size count where required. ";
+                    feedback += "FAILED. List size is " + lst.size() + ", expected 1. Check that you correctly update your size count where required. ";
                     incorrect++;
+                }
+                else {
+                    feedback += "PASSED. ";
                 }
                 tests += 2;
 
+                feedback += "** Test 11: Testing lower bound of get...";
 		try
 		{
+
 			lst.get(-1);
-			feedback += "Your list should throw an exception on a negative 'get'. ";
+			feedback += "FAILED. Your list should throw an exception on a negative 'get'. ";
                         incorrect++;
 		}
 		catch (IndexOutOfBoundsException e)
 		{
-
+                        feedback += "PASSED. ";
 		}
 		
+                feedback += "** Test 12: Testing upper bound of get...";
 		try
 		{
 			lst.get(2);
-			feedback += "Your list should throw an exception when the argument to 'get' is too high. ";
+			feedback += "FAILED. Your list should throw an exception when the argument to 'get' is too high. ";
                         incorrect++;
 		}
 		catch (IndexOutOfBoundsException e)
 		{
-
+                        feedback += "PASSED. ";
 		}
 		
+                feedback += "** Test 13: Testing lower bound of set...";
 		try
 		{
 			lst.set(-1, 2);
-			feedback += "Your list should throw an exception when the index of 'set' is too low. ";
+			feedback += "FAILED. Your list should throw an exception when the index of 'set' is too low. ";
                         incorrect++;
 		}
 		catch (IndexOutOfBoundsException e)
 		{
-
+                        feedback += "PASSED. ";
 		}
 		
+                feedback += "** Test 14: Testing upper bound of set...";
 		try
 		{
 			lst.set(2, 2);
-                        feedback += "Your list should throw an exception when the index of 'set' is too high. ";
+                        feedback += "FAILED. Your list should throw an exception when the index of 'set' is too high. ";
                         incorrect++;
 		}
 		catch (IndexOutOfBoundsException e)
 		{
-			
+		        feedback += "PASSED. ";	
 		}
 		
+                feedback += "** Test 15: Using set with null value...";
 		try
 		{
 			lst.set(0, null);
-                        feedback += "Your list should throw an exception when the element of 'set' is null. ";
+                        feedback += "FAILED. Your list should throw an exception when the element of 'set' is null. ";
                         incorrect++;
 		}
 		catch (NullPointerException e)
 		{
-
+                        feedback += "PASSED. ";
 		}
 		
+                feedback += "** Test 16: Testing lower bound of remove...";
 		try
 		{
 			lst.remove(-1);
-                        feedback += "Your list should throw an exception when the index of 'remove' is too low. ";
+                        feedback += "FAILED. Your list should throw an exception when the index of 'remove' is too low. ";
                         incorrect++;
 		}
 		catch (IndexOutOfBoundsException e)
 		{
-
+                        feedback += "PASSED. ";
 		}
 		
+                feedback += "** Test 17: Testing upper bound of remove...";
 		try
 		{
 			lst.remove(2);
-                        feedback += "Your list should throw an exception when the index of 'remove' is too high. ";
+                        feedback += "FAILED. Your list should throw an exception when the index of 'remove' is too high. ";
                         incorrect++;
 		}
 		catch (IndexOutOfBoundsException e)
 		{
-
+                        feedback += "PASSED. ";
 		}
 
+                feedback += "** Test 18: Testing lower bound of add...";
                 try
 		{
 			lst.add(-1, 5);
-                        feedback += "Your list should throw an exception when the index of 'add' is too low. ";
+                        feedback += "FAILED. Your list should throw an exception when the index of 'add' is too low. ";
                         incorrect++;
 		}
 		catch (IndexOutOfBoundsException e)
 		{
-
+                        feedback += "PASSED. ";
 		}
 
+                feedback += "** Test 19: Testing upper bound of add...";
                 try
 		{
 			lst.add(3, 5);
-                        feedback += "Your list should throw an exception when the index of 'add' is too high. ";
+                        feedback += "FAILED. Your list should throw an exception when the index of 'add' is too high. ";
                         incorrect++;
+
 		}
 		catch (IndexOutOfBoundsException e)
 		{
-
+                        feedback += "PASSED. ";
 		}
 
+                feedback += "** Test 20: Adding null element...";
                 try
 		{
 			lst.add(1, null);
-                        feedback += "Your list should throw an exception when the element of 'add' is null. ";
+                        feedback += "FAILED. Your list should throw an exception when the element of 'add' is null. ";
                         incorrect++;
 		}
 		catch (NullPointerException e)
 		{
-
+                        feedback += "PASSED. ";
 		}
                 tests += 10;
 
                 if (incorrect == 0) {
-                        feedback = "Congrats! All test cases passed.";
+                        feedback += "Congrats! All test cases passed.";
                 }
-                out.println("{\"fractionalScore\": " + (1.0 - incorrect/ (float)tests) + ", \"feedback\": \"" + feedback + "\"}");
+                else {
+                        feedback = "Some test cases failed. Please check the following: " + feedback;
+                }
+                out.println("{\"fractionalScore\": " + (float)(tests - incorrect) / tests + ", \"feedback\": \"" + feedback + "\"}");
                 out.close();
 	}
 	

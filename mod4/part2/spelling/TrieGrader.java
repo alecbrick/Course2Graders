@@ -60,34 +60,34 @@ public class TrieGrader {
 
 
     private void testAddWords(AutoCompleteDictionaryTrie ac) {
-        feedback += "TESTING ADDING WORDS (addWord, insert) \\n ";
-        feedback += "//*  TEST #1 : Adding first word to dictionary...  *//\\n ";
+        feedback += "TESTING ADDING WORDS (addWord, insert)  ";
+        feedback += "//*  TEST #1 : Adding first word to dictionary...  *// ";
         if (!ac.addWord("dog")) {
-            feedback += "FAILED: Simple word add failed\\n ";
+            feedback += "FAILED: Simple word add failed ";
             incorrect++;
         }
         else {
-            feedback += "PASSED: First word successfully added\\n ";
+            feedback += "PASSED: First word successfully added ";
         }
 
         tests++;
 
-        feedback += "//*  TEST #2 : Adding two more words and testing size...  *//\\n ";
+        feedback += "//*  TEST #2 : Adding two more words and testing size...  *// ";
         ac.addWord("downhill");
         ac.addWord("downhiller");
         
         if(ac.size() != 3) {
-            feedback += "FAILED: Incorrect size after adding three words\\n ";
+            feedback += "FAILED: Incorrect size after adding three words ";
             incorrect++;
         }
         else {
-            feedback += "PASSED: Correct size after adding three words\\n ";
+            feedback += "PASSED: Correct size after adding three words ";
         }
         tests++;
 
 
-        feedback += "//* TEST #3 : Adding list of words to dictionary trie... (testing size after insert)  *//\\n ";
-        feedback += "Populating List of words...\\n ";
+        feedback += "//* TEST #3 : Adding list of words to dictionary trie... (testing size after insert)  *// ";
+        feedback += "Populating List of words... ";
         ArrayList<String> words = new ArrayList<String>();
         words.add("doge");
         words.add("dogg");
@@ -114,11 +114,11 @@ public class TrieGrader {
         ac.insert(words);
 
         if (ac.size() != 24) {
-            feedback += "FAILED: Incorrect size after adding list: expected 24, got " + ac.size() + "\\n ";
+            feedback += "FAILED: Incorrect size after adding list: expected 24, got " + ac.size() + " ";
             incorrect++;
         }
         else {
-            feedback += "PASSED: Correct size after adding list of words!\\n ";
+            feedback += "PASSED: Correct size after adding list of words! ";
         }
 
         tests++;
@@ -126,23 +126,23 @@ public class TrieGrader {
         // get current size before trying to add duplicate word
         int expectedSize = ac.size();
 
-        feedback += "//* TEST #4 : Adding duplicate word...  *//\\n ";
+        feedback += "//* TEST #4 : Adding duplicate word...  *// ";
         if(ac.addWord("dog")) {
-            feedback += "FAILED: addWord returned true when adding duplicate word\\n ";
+            feedback += "FAILED: addWord returned true when adding duplicate word ";
             incorrect++;
         }
         else {
-            feedback += "PASSED: addWord returned false when adding duplicate word\\n ";
+            feedback += "PASSED: addWord returned false when adding duplicate word ";
         }
         tests++;
 
-        feedback += "//* TEST #5 : Checking size after try to add duplicate word...  *//\\n ";
+        feedback += "//* TEST #5 : Checking size after try to add duplicate word...  *// ";
         if(ac.size() != expectedSize) {
-            feedback += "FAILED: Incorrect size after trying to add duplicate word: expected " + expectedSize + ", got " + ac.size() + "\\n ";
+            feedback += "FAILED: Incorrect size after trying to add duplicate word: expected " + expectedSize + ", got " + ac.size() + " ";
             incorrect++;
         }
         else {
-            feedback += "PASSED: Size unchanged when adding duplicate\\n ";
+            feedback += "PASSED: Size unchanged when adding duplicate ";
         }
 
         tests++;
@@ -152,26 +152,26 @@ public class TrieGrader {
     private void testWordsInOut(AutoCompleteDictionaryTrie ac) {
         // TEST WORDS IN/OUT OF DICTIONARY
 
-        feedback += "\\nTESTING FOR WORDS IN/OUT OF DICTIONARY (isWord)\\n ";
-        feedback += "//*  TEST #6 : Checking empty string...  *//\\n ";
+        feedback += "TESTING FOR WORDS IN/OUT OF DICTIONARY (isWord) ";
+        feedback += "//*  TEST #6 : Checking empty string...  *// ";
         // test empty string
         if(ac.isWord("")) {
             incorrect++;
-            feedback += "FAILED: Empty string found in dictionary.\\n ";
+            feedback += "FAILED: Empty string found in dictionary. ";
         }
         else {
-            feedback += "PASSED\\n ";
+            feedback += "PASSED ";
         }
 
         tests++;
 
-        feedback += "//*  TEST #7 : Checking for word inserted from list...  *//\\n ";
+        feedback += "//*  TEST #7 : Checking for word inserted from list...  *// ";
         if (!ac.isWord("doggoes")) {
-            feedback += "FAILED: Can't find word inserted from a list\\n ";
+            feedback += "FAILED: Can't find word inserted from a list ";
             incorrect++;
         }
         else {
-            feedback += "PASSED: Word inserted from list found\\n ";
+            feedback += "PASSED: Word inserted from list found ";
         }
 
 
@@ -180,48 +180,48 @@ public class TrieGrader {
 
 
         // test word only missing last letter
-        feedback += "//*  TEST #8 : Testing word only missing last letter...  *//\\n ";
+        feedback += "//*  TEST #8 : Testing word only missing last letter...  *// ";
         if(ac.isWord("downhil")) {
             incorrect++;
-            feedback += "FAILED: Make sure you are testing for the entire word in isWord. i.e. \"downhil\" is not valid, \"downhilli\" is\\n ";
+            feedback += "FAILED: Make sure you are testing for the entire word in isWord. i.e. 'downhil' is not valid, 'downhill' is ";
         }
         else {
-            feedback += "PASSED: Off by one word not found\\n ";
+            feedback += "PASSED: Off by one word not found ";
         }
 
         tests++;
 
         //test word with added letter
-        feedback += "//*  TEST #9 : Testing word with one extra letter...  *//\\n ";
+        feedback += "//*  TEST #9 : Testing word with one extra letter...  *// ";
         if(ac.isWord("downhille")) {
             incorrect++;
-            feedback += "FAILED: isWord returns true when word valid except for additional last letter. i.e.\"downhille\" is not valid, \"downhill\" is.\\n ";
+            feedback += "FAILED: isWord returns true when word valid except for additional last letter. i.e. 'downhille' is not valid, 'downhill' is. ";
         }
         else {
-            feedback += "PASSED: Off by one word not found.\\n ";
+            feedback += "PASSED: Off by one word not found. ";
         }
 
         tests++;
 
         
-        feedback += "//*  TEST #10 : Testing for more words in dictionary...  *//\\n ";
+        feedback += "//*  TEST #10 : Testing for more words in dictionary...  *// ";
         if(!ac.isWord("test") || !ac.isWord("testcases") || !ac.isWord("testone")) {
             incorrect++;
-            feedback += "FAILED: isWord returns false when passed valid string.\\n ";
+            feedback += "FAILED: isWord returns false when passed valid string. ";
         }
         else {
-            feedback += "PASSED: Standard word lookups return as expected\\n ";
+            feedback += "PASSED: Standard word lookups return as expected ";
         }
 
         tests++;
 
-        feedback += "//*  TEST #11 : Testing word with capital letters...  *//\\n "; 
+        feedback += "//*  TEST #11 : Testing word with capital letters...  *// "; 
         if(!ac.isWord("TeSt")) {
             incorrect++;
-            feedback += "FAILED: Make sure you are converting to lowercase when adding and checking words\\n ";
+            feedback += "FAILED: Make sure you are converting to lowercase when adding and checking words ";
         }
         else {
-            feedback += "PASSED: Word with capitals still found\\n ";
+            feedback += "PASSED: Word with capitals still found ";
         }
 
         tests++;
@@ -232,52 +232,52 @@ public class TrieGrader {
 
     private void testPredictions(AutoCompleteDictionaryTrie ac) {
 
-        feedback += "//*  TEST #12 : TESTING AUTO COMPLETE FUNCTIONALITY (predictCompletions)  *//\\n ";
+        feedback += "//*  TEST #12 : TESTING AUTO COMPLETE FUNCTIONALITY (predictCompletions)  *// ";
         List<String> auto = ac.predictCompletions("dog", 3);
         
-        feedback += "//*  TEST #13 : completions requested...  *//\\n ";
+        feedback += "//*  TEST #13 : completions requested...  *// ";
         if (!(auto.contains("dog") && auto.contains("dogg") && auto.contains("doge"))) {
-            feedback += "FAILED: predictCompletions doesn't return the correct completions - make sure it returns the shortest words\\n ";
+            feedback += "FAILED: predictCompletions doesn't return the correct completions - make sure it returns the shortest words ";
             incorrect++;
         }
         else {
-            feedback += "PASSED: predictCompletions returns list with correct 3 completions\\n ";
+            feedback += "PASSED: predictCompletions returns list with correct 3 completions ";
         }
 
-        feedback += "//*  TEST #14 : Testing size of list...  *//\\n ";
+        feedback += "//*  TEST #14 : Testing size of list...  *// ";
         if (auto.size() != 3) {
-            feedback += "FAILED: predictCompletions returns " + auto.size() + " elements when it should return 3\\n ";
+            feedback += "FAILED: predictCompletions returns " + auto.size() + " elements when it should return 3 ";
             incorrect++;
         }
         else {
-            feedback += "PASSED: predictCompletions returns list of correct size\\n ";
+            feedback += "PASSED: predictCompletions returns list of correct size ";
         }
 
         tests += 2;
 
         auto = ac.predictCompletions("soup", 6);
-        feedback += "//*  TEST #14 : 6 completions requested, 0 expected...  *//\\n ";
+        feedback += "//*  TEST #14 : 6 completions requested, 0 expected...  *// ";
         if (auto.size() != 0) {
-            feedback += "FAILED: predictCompletions found words where no words should have been found\\n ";
+            feedback += "FAILED: predictCompletions found words where no words should have been found ";
             incorrect++;
         }
         else {
-            feedback += "PASSED: predictCompletions returned list of size 0\\n ";
+            feedback += "PASSED: predictCompletions returned list of size 0 ";
         }
 
         tests++;
 
         auto = ac.predictCompletions("dogg", 10);
-        feedback += "//*  TEST #15 : 10 completions requested, 6 expected...  *//\\n ";
+        feedback += "//*  TEST #15 : 10 completions requested, 6 expected...  *// ";
         if (auto.size() != 6) {
-            feedback += "FAILED: predictCompletions returns " + auto.size() + " elements when it should return 6\\n ";
+            feedback += "FAILED: predictCompletions returns " + auto.size() + " elements when it should return 6 ";
             incorrect++;
         }
         else {
-            feedback += "PASSED: predictCompletions returns list of size 6 as expected\\n ";
+            feedback += "PASSED: predictCompletions returns list of size 6 as expected ";
         }
         
-        feedback += "//*  TEST #16 : Testing for correctness of 6 words...\\n  *//";
+        feedback += "//*  TEST #16 : Testing for correctness of 6 words...  *//";
         ArrayList<String> expected = new ArrayList<String>();
         expected.add("doggo");
         expected.add("doggie");
@@ -285,23 +285,23 @@ public class TrieGrader {
         expected.add("doggoes");
         expected.add("doggies");
         if(!auto.containsAll(expected)) {
-            feedback += "FAILED: predictCompletions does not return expected words\\n ";
+            feedback += "FAILED: predictCompletions does not return expected words ";
             incorrect++;
         }
         else {
-            feedback += "PASSED: predictCompletions returned expected words\\n ";
+            feedback += "PASSED: predictCompletions returned expected words ";
         }
         tests += 2;
 
         auto = ac.predictCompletions("test", 7);
 
-        feedback += "//*  TEST #17 : 7 completions requested... (test for size)  *//\\n ";
+        feedback += "//*  TEST #17 : 7 completions requested... (test for size)  *// ";
         if(auto.size() != 7) {
-            feedback += "FAILED: predictCompletions returns " + auto.size() + " elements when it should return 7\\n ";
+            feedback += "FAILED: predictCompletions returns " + auto.size() + " elements when it should return 7 ";
             incorrect++;
         }
         else {
-            feedback += "PASSED: predictCompletions returned list of size 7 as expected\\n ";
+            feedback += "PASSED: predictCompletions returned list of size 7 as expected ";
         }
 
         tests++;
@@ -313,12 +313,12 @@ public class TrieGrader {
         expected.add("testin");
         expected.add("teston");
 
-        feedback += "//*  TEST #18 : Testing if list is sorted from shortest to longest...  *//\\n ";
+        feedback += "//*  TEST #18 : Testing if list is sorted from shortest to longest...  *// ";
         boolean failed = false;
         for(int i = 0; i < auto.size() - 1; i++) {
 
             if(auto.get(i+1).length() < auto.get(i).length()) {
-                feedback += "FAILED: String at index " + (i+1) + " is shorter than string at index " + i + "\\n ";
+                feedback += "FAILED: String at index " + (i+1) + " is shorter than string at index " + i + " ";
                 incorrect++;
                 failed = true;
                 break;
@@ -327,7 +327,7 @@ public class TrieGrader {
         }
         
         if(!failed) {
-            feedback += "PASSED: List sorted correctly\\n ";
+            feedback += "PASSED: List sorted correctly ";
         }
 
         tests++;
@@ -336,19 +336,19 @@ public class TrieGrader {
 
         List<String> partialList = auto.subList(0, 5);
         
-        feedback += "//*  TEST #19 : Testing if list contains correct shorter words...  *//\\n ";
+        feedback += "//*  TEST #19 : Testing if list contains correct shorter words...  *// ";
         if(!partialList.containsAll(expected)) {
-            feedback += "FAILED: predictCompletion returns incorrect words\\n ";
+            feedback += "FAILED: predictCompletion returns incorrect words ";
             incorrect++;
         }  
         else {
-            feedback += "PASSED: predictCompletions returns expected shorter words\\n ";
+            feedback += "PASSED: predictCompletions returns expected shorter words ";
         }
 
         tests++;
 
 
-        feedback += "//*  TEST #20 : Testing for remaining words...  *//\\n ";
+        feedback += "//*  TEST #20 : Testing for remaining words...  *// ";
         partialList = auto.subList(5, auto.size());
 
         int count = 0;
@@ -359,10 +359,10 @@ public class TrieGrader {
         count = partialList.contains("testing") ? ++count:count;
 
         if(count != 2) {
-            feedback += "FAILED: Last (longer) words in list not as expected\\n ";
+            feedback += "FAILED: Last (longer) words in list not as expected ";
         }
         else {
-            feedback += "PASSED: Valid longer words found in list\\n ";
+            feedback += "PASSED: Valid longer words found in list ";
         }
        
         tests++;

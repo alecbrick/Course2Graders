@@ -23,43 +23,43 @@ public class NearbyWordsGrader {
             DictionaryLoader.loadDictionary(d, "dict.txt");
             NearbyWords nw = new NearbyWords(d);
 
-            feedback += "Testing suggestions method. Test 1: 2 suggestions... ";
+            feedback += "** Test 1: 2 suggestions... ";
             List<String> d1 = nw.suggestions("dag", 2);
             if (d1.size() != 2) {
-                feedback += "FAILED: " + d1.size() + " suggestions returned instead. ";
+                feedback += "FAILED. " + d1.size() + " suggestions returned instead. ";
                 incorrect++;
             }
             else {
-                feedback += "PASSED: 2 suggestions returned. ";
+                feedback += "PASSED: ";
             }
 
-            feedback += "Test 2: Checking suggestion correctness... ";
+            feedback += "** Test 2: Checking suggestion correctness... ";
             if (!(d1.contains("dog") && d1.contains("dogs"))) {
-                feedback += "FAILED: Suggestions don't contain expected set of words. ";
+                feedback += "FAILED. Suggestions don't contain expected set of words. ";
                 incorrect++;
             }
             else {
-                feedback += "PASSED: Expected words returned. ";
+                feedback += "PASSED. ";
             }
             tests += 2;
 
-            feedback += "Test 3: 3 suggestions... ";
+            feedback += "** Test 3: 3 suggestions... ";
             d1 = nw.suggestions("fare", 3);
             if (d1.size() != 3) {
-                feedback += "FAILED: " + d1.size() + " suggestions returned instead. ";
+                feedback += "FAILED. " + d1.size() + " suggestions returned instead. ";
                 incorrect++;
             }
             else {
-                feedback += "PASSED: 3 suggestions returned. ";
+                feedback += "PASSED. ";
             }
 
-            feedback += "Test 4: Checking suggestion correctness... ";
+            feedback += "** Test 4: Checking suggestion correctness... ";
             if (!(d1.contains("fir") && d1.contains("fire") && d1.contains("fired"))) {
-                feedback += "FAILED: Suggestions don't contain expected set of words. ";
+                feedback += "FAILED. Suggestions don't contain expected set of words. ";
                 incorrect++;
             }
             else {
-                feedback += "PASSED: Expected words returned. ";
+                feedback += "PASSED. ";
             }
             tests += 2;
 
