@@ -12,6 +12,7 @@ MOD4_PART1_ID="3YwBB"
 MOD4_PART2_ID="gjuKe"
 MOD5_PART1_ID="IEm7C"
 MOD5_PART2_ID="pmzXG"
+MOD5_PART3_ID="16fSM"
 
 while [ $# -gt 1 ]
   do
@@ -82,6 +83,12 @@ elif [ "$PARTID" == "$MOD5_PART1_ID" ] || [ "$PARTID" == "$MOD5_PART2_ID" ]; the
   fi
   FILENAME="spelling.NearbyWordsGrader"
   cp /shared/submission/NearbyWords.java "$GRADER_DIRECTORY"/spelling
+  cd "$GRADER_DIRECTORY"
+  javac spelling/*.java 2>errorfile
+elif [ "$PARTID" == "$MOD5_PART3_ID" ]; then
+  GRADER_DIRECTORY=mod5/part3
+  FILENAME="spelling.WPTreeGrader"
+  cp /shared/submission/WPTree.java "$GRADER_DIRECTORY"/spelling
   cd "$GRADER_DIRECTORY"
   javac spelling/*.java 2>errorfile
 else
