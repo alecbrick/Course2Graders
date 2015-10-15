@@ -42,7 +42,7 @@ COPY mod5/part1/* /grader/mod5/part1/
 COPY mod5/part2/* /grader/mod5/part2/
 COPY mod5/part1/spelling/* /grader/mod5/part1/spelling/
 COPY mod5/part2/spelling/* /grader/mod5/part2/spelling/
-COPY grader.py /grader/grader.py
+COPY compile_error.py /grader/compile_error.py
 
 RUN chmod a+rwx -R /grader/
 

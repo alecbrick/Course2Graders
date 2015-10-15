@@ -19,20 +19,24 @@ public class MarkovTextGeneratorGrader {
             int tests = 0;
             String feedback = "";
 
+            feedback += "** Test 1: Generating text before training...";
             try {
                 String s = gen.generateText(20);
+                feedback += "PASSED. ";
             } catch (Exception e) {
                 incorrect++;
-                feedback = "Check that your program doesn't crash when the generator tries to generate text without being trained; ";
+                feedback += "FAILED. Check that your program doesn't crash when the generator tries to generate text without being trained. ";
             }
             tests++;
 
             gen.train("");
+            feedback += "** Test 2: Generating text after training on an empty file...";
             try {
                 String s = gen.generateText(20);
+                feedback += "PASSED. ";
             } catch (Exception e) {
                 incorrect++;
-                feedback += "Make sure that your program doesn't crash when generating text after being trained with an empty file; ";
+                feedback += "FAILED. Make sure that your program doesn't crash when generating text after being trained with an empty file; ";
             }
             tests++;
 
@@ -41,9 +45,13 @@ public class MarkovTextGeneratorGrader {
             String res = gen.generateText(LENGTH);
 
             String[] words = res.split("[\\s]+");
+            feedback += "** Test #3: Checking requested generator word count...";
             if (res.split("[\\s]+").length != LENGTH) {
                 incorrect++;
-                feedback += "Your generator doesn't always produce the right amount of words; ";
+                feedback += "FAILED. Your generator produced " + res.split("[\\s]+").length + " words when it should have produced " + LENGTH + ". ";
+            }
+            else {
+                feedback += "PASSED. ";
             }
             tests++;
 
@@ -58,35 +66,55 @@ public class MarkovTextGeneratorGrader {
                 }
             }
 
+            feedback += "** Test #4: Testing specific word counts...";
             if (wordCounts.get("I") < LENGTH / 2) {
                 incorrect++;
-                feedback += "The expected word count of certain words isn't high enough; ";
+                feedback += "FAILED. The expected word count of certain words isn't high enough. ";
+            }
+            else {
+                feedback += "PASSED. ";
             }
             tests++;
 
+            boolean found = true;
+            feedback += "** Test #5: Checking that every word is used at least once...";
             for (String w : input.split(" ")) {
                 if (!wordCounts.containsKey(w)) {
                     incorrect++;
-                    feedback += "Your generator doesn't produce every possible word; ";
+                    found = false;
+                    feedback += "FAILED. Your generator doesn't produce every possible word. ";
                     break;
                 }
             }
+            if (found) {
+                feedback += "PASSED. ";
+            }
             tests++;
 
+            found = true;
+            feedback += "** Test 6: Seeing if last word is always followed by first word...";
             for (int i = 0; i < words.length; i++) {
                 if (words[i].equals("socks.")) {
                     if (i + 1 < words.length && !words[i + 1].equals("I")) {
                         incorrect++;
-                        feedback += "Make sure that the last word of the input file is always followed by the first; ";
+                        found = false;
+                        feedback += "FAILED. Make sure that the last word of the input file is always followed by the first. ";
                         break;
                     }
                 }
             }
+            if (found) {
+                feedback += "PASSED. ";
+            }
             tests++;
 
+            feedback += "** Test #7: Requesting zero words...";
             if (!gen.generateText(0).equals("")) {
                 incorrect++;
-                feedback += "The text generator shouldn't produce anything when zero words are requested; ";
+                feedback += "FAILED. The text generator shouldn't produce anything when zero words are requested. ";
+            }
+            else {
+                feedback += "PASSED. ";
             }
             tests++;
 
@@ -94,6 +122,7 @@ public class MarkovTextGeneratorGrader {
             res = gen.generateText(LENGTH);
             words = res.split("[\\s]+");
             int i = 0;
+            feedback += "** Test #8: Running train() on a generator that has already been trained...";
             for (String w : words) {
                 if (w.equals("I")) {
                     i++;
@@ -102,20 +131,30 @@ public class MarkovTextGeneratorGrader {
 
             if (i < LENGTH / 2) {
                 incorrect++;
-                feedback += "Make sure that train() doesn't remove the original word lists; ";
+                feedback += "FAILED. Make sure that train() doesn't remove the original word lists. Note that if Test #4 failed, this one will fail too. ";
+            }
+            else {
+                feedback += "PASSED. ";
             }
             tests++;
 
             gen.retrain("");
+            feedback += "Test #9: Testing retrain()...";
             String s = gen.generateText(20);
-            if(s.split("[\\s]+").length != 0) {
+            if(s.split("[\\s]+").length != 0 && s.length() != 0) {
                 incorrect++;
-                feedback += "Ensure that retrain() removes the original word lists; ";
+                feedback += "FAILED. Ensure that retrain() removes the original word lists. ";
+            }
+            else {
+                feedback += "PASSED. ";
             }
             tests++;
 
             if (incorrect == 0) {
-                feedback = "Congrats! You passed all the tests.";
+                feedback += "Congrats! You passed all the tests.";
+            }
+            else {
+                feedback = "Some tests failed. Please check the following: " + feedback;
             }
 
             PrintWriter f = new PrintWriter("output.out");
