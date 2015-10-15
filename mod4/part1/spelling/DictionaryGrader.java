@@ -28,20 +28,20 @@ public class DictionaryGrader {
                 feedback += "PASSED. ";
             }
 
-            feedback += "** Test #2: Looking up word from last test...";
-            if (!dictLL.isWord("teSt")) {
+            feedback += "** Test #2: Adding a second word...";
+            dictLL.addWord("second");
+            if (dictLL.size() != 2) {
                 incorrect++;
-                feedback += "FAILED. Inserted word is not found in LL dictionary. Make sure the word is converted to lowercase on both entry and lookup. ";
+                feedback += "FAILED. Incorrect size of LL dictionary after insertion of two words. ";
             }
             else {
                 feedback += "PASSED. ";
             }
 
-            feedback += "** Test #3: Adding a second word...";
-            dictLL.addWord("second");
-            if (dictLL.size() != 2) {
+            feedback += "** Test #3: Looking up word from first test...";
+            if (!dictLL.isWord("teSt")) {
                 incorrect++;
-                feedback += "FAILED. Incorrect size of LL dictionary after insertion of two words. ";
+                feedback += "FAILED. Inserted word is not found in LL dictionary. Make sure the word is converted to lowercase on both entry and lookup. ";
             }
             else {
                 feedback += "PASSED. ";
@@ -60,20 +60,20 @@ public class DictionaryGrader {
                 feedback += "PASSED. ";
             }
 
-            feedback += "** Test #5: Retrieving the word from the last test...";
-            if (!dictBST.isWord("teSt")) {
+            feedback += "** Test #5: Adding second word to BST dictionary...";
+            dictBST.addWord("second");
+            if (dictBST.size() != 2) {
                 incorrect++;
-                feedback += "FAILED. Inserted word is not found in BST dictionary. Make sure the word is converted to lowercase on both entry and lookup; ";
+                feedback += "FAILED. Incorrect size of BST dictionary after insertion of two words; ";
             }
             else {
                 feedback += "PASSED. ";
             }
 
-            feedback += "** Test #6: Adding second word to BST dictionary...";
-            dictBST.addWord("second");
-            if (dictBST.size() != 2) {
+            feedback += "** Test #6: Retrieving the word from the last test...";
+            if (!dictBST.isWord("teSt")) {
                 incorrect++;
-                feedback += "FAILED. Incorrect size of BST dictionary after insertion of two words; ";
+                feedback += "FAILED. Inserted word is not found in BST dictionary. Make sure the word is converted to lowercase on both entry and lookup; ";
             }
             else {
                 feedback += "PASSED. ";
@@ -92,6 +92,27 @@ public class DictionaryGrader {
                 feedback += "PASSED. ";
             }
             tests += 4;
+
+            feedback += "** Test #8: Testing non-word in DictLL...";
+
+            if (dictLL.isWord("soup")) {
+                incorrect++;
+                feedback += "FAILED. 'soup' should not be a word. ";
+            }
+            else {
+                feedback += "PASSED. ";
+            }
+
+            feedback += "** Test #9: Testing non-word in DictBST...";
+            if (dictBST.isWord("soup")) {
+                incorrect++;
+                feedback += "FAILED. 'soup' should not be a word. ";
+            }
+            else {
+                feedback += "PASSED. ";
+            }
+            tests += 2;
+
         } catch (Exception e) {
             out.println("{\"fractionalScore\": 0.0, \"feedback\": \"Runtime error: " + e + "\"}");
             out.close();
