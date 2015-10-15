@@ -13,6 +13,12 @@ public class MarkovTextGeneratorGrader {
 
     public static void main(String[] args) {
         try {
+            PrintWriter f = new PrintWriter("output.out");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        try {
             MarkovTextGenerator gen = new MarkovTextGeneratorLoL(new Random());
             
             int incorrect = 0;
@@ -157,12 +163,11 @@ public class MarkovTextGeneratorGrader {
                 feedback = "Some tests failed. Please check the following: " + feedback;
             }
 
-            PrintWriter f = new PrintWriter("output.out");
             f.println(makeJson((double)(tests - incorrect) / tests, feedback));
             f.close();
             return;
         } catch (Exception e) {
-            System.out.println(makeJson(0.0, "Error during runtime: " + e));
+            f.println(makeJson(0.0, "Error during runtime: " + e));
         }
     }
 }
