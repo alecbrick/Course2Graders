@@ -88,30 +88,28 @@ public class TrieGrader {
 
         feedback += "//* TEST #3 : Adding list of words to dictionary trie... (testing size after insert)  *// ";
         feedback += "Populating List of words... ";
-        ArrayList<String> words = new ArrayList<String>();
-        words.add("doge");
-        words.add("dogg");
-        words.add("dawg");
-        words.add("dage");
-        words.add("doggo");
-        words.add("doggie");
-        words.add("doggos");
-        words.add("doggoes");
-        words.add("doggies");
-        words.add("test");
-        words.add("tester");
-        words.add("testing");
-        words.add("tested");
-        words.add("testin");
-        words.add("teston");
-        words.add("testone");
-        words.add("testine");
-        words.add("testell");
-        words.add("testcase");
-        words.add("testbase");
-        words.add("testcases");
 
-        ac.insert(words);
+        ac.addWord("doge");
+        ac.addWord("dogg");
+        ac.addWord("dawg");
+        ac.addWord("dage");
+        ac.addWord("doggo");
+        ac.addWord("doggie");
+        ac.addWord("doggos");
+        ac.addWord("doggoes");
+        ac.addWord("doggies");
+        ac.addWord("test");
+        ac.addWord("tester");
+        ac.addWord("testing");
+        ac.addWord("tested");
+        ac.addWord("testin");
+        ac.addWord("teston");
+        ac.addWord("testone");
+        ac.addWord("testine");
+        ac.addWord("testell");
+        ac.addWord("testcase");
+        ac.addWord("testbase");
+        ac.addWord("testcases");
 
         if (ac.size() != 24) {
             feedback += "FAILED: Incorrect size after adding list: expected 24, got " + ac.size() + " ";

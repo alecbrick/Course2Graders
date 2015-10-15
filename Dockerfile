@@ -31,8 +31,7 @@ RUN mkdir /grader/mod5/part3
 RUN mkdir /grader/mod5/part1/spelling
 RUN mkdir /grader/mod5/part2/spelling
 RUN mkdir /grader/mod5/part3/spelling
-RUN mkdir /grader/mod5/part3/MOOCTextEditor
-RUN mkdir /grader/mod5/part3/MOOCTextEditor/data
+RUN mkdir /grader/mod5/part3/data
 
 COPY executeGrader.sh /grader/executeGrader.sh
 COPY mod1/* /grader/mod1/
@@ -47,7 +46,7 @@ COPY mod5/part2/* /grader/mod5/part2/
 COPY mod5/part1/spelling/* /grader/mod5/part1/spelling/
 COPY mod5/part2/spelling/* /grader/mod5/part2/spelling/
 COPY mod5/part3/spelling/* /grader/mod5/part3/spelling/
-COPY mod5/part3/MOOCTextEditor/data/* /grader/mod5/part3/MOOCTextEditor/data/
+COPY mod5/part3/data/* /grader/mod5/part3/data/
 COPY compile_error.py /grader/compile_error.py
 
 RUN chmod a+rwx -R /grader/
