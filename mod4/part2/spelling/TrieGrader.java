@@ -168,7 +168,7 @@ public class TrieGrader {
 
         tests++;
 
-        appendTestString(7, "Checking for word inserted from list...");
+        appendTestString(7, "Checking for word in dictionary...");
         if (!ac.isWord("doggoes")) {
             feedback.append("FAILED. Can't find word inserted from a list ");
             incorrect++;
