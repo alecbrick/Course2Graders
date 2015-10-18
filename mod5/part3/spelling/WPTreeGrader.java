@@ -18,6 +18,10 @@ public class WPTreeGrader {
         return ret;
     }
 
+    public static String appendFeedback(int num, String desc) {
+        return "\\n** Test #" + num + ": " + desc + "...";
+    }
+
     public static void main (String[] args) {
         int incorrect = 0;
         int tests = 0;
@@ -36,7 +40,7 @@ public class WPTreeGrader {
 
             List<String> path = tree.findPath("pool", "spoon");
 
-            feedback += "** Test #1: Testing short path...";
+            feedback += appendFeedback(1, "Testing short path");
             if (!(path != null && path.size() == 3 && path.get(0).equals("pool") && path.get(1).equals("spool") && path.get(2).equals("spoon"))) {
                 feedback += "FAILED. Your list was: " + printPath(path) + "; expected: pool, spool, spoon. ";
                 incorrect++;
@@ -48,7 +52,7 @@ public class WPTreeGrader {
 
             path = tree.findPath("stools", "moon");
 
-            feedback += "** Test #2: Testing long path...";
+            feedback += appendFeedback(2, "Testing long path");
             if (!(path != null && path.size() == 9 &&
                 path.get(0).equals("stools") &&
                 path.get(1).equals("tools") &&
@@ -69,7 +73,7 @@ public class WPTreeGrader {
 
             path = tree.findPath("foal", "needless");
 
-            feedback += "** Test #3: Testing impossible path...";
+            feedback += appendFeedback(3, "Testing impossible path");
             if (path != null) {
                 feedback += "FAILED. Path found between 'foal' and 'needless' that should not exist: " + printPath(path) + ". ";
                 incorrect++;
@@ -80,7 +84,7 @@ public class WPTreeGrader {
 
             path = tree.findPath("needle", "kitten");
             
-            feedback += "** Test #4: Testing using a nonexistent word...";
+            feedback += appendFeedback(4, "Testing using a nonexistent word");
             if (path != null) {
                 feedback += "FAILED. Path found involving nonexistent word: " + printPath(path) + ". ";
                 incorrect++;
@@ -89,14 +93,14 @@ public class WPTreeGrader {
                 feedback += "PASSED. ";
             }
         } catch (Exception e) {
-            out.println("{\"fractionalScore\": 0.0, \"feedback\": \"" + e + "\"}");
+            out.println("{\"fractionalScore\": 0.0, \"feedback\": \"" + feedback + "\\nError during runtime: " + e + "\"}");
         }
 
         if (incorrect == 0) {
-            feedback += "All tests passed. Well done!";
+            feedback = "All tests passed. Well done!\\n" + feedback;
         } 
         else {
-            feedback = "Some tests failed. Please check the following: " + feedback;
+            feedback = "Some tests failed. Please check the following: \\n" + feedback;
         }
 
         out.println("{\"fractionalScore\": " + (float)(tests - incorrect) / tests + ", \"feedback\": \"" + feedback + "\"}");

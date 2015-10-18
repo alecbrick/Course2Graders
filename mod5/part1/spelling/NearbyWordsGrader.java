@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.io.PrintWriter;
 
 public class NearbyWordsGrader {
+    public static String appendFeedback(int num, String desc) {
+        return "\\n** Test #" + num + ": " + desc + "...";
+    }
+
     public static void main(String args[]) {
         int tests = 0;
         int incorrect = 0;
@@ -25,7 +29,7 @@ public class NearbyWordsGrader {
 
             List<String> d1 = nw.distanceOne("word", true);
             
-            feedback += "** Test 1: distanceOne list size... ";
+            feedback += appendFeedback(1, "distanceOne list size");
             if (d1.size() != 5) {
                 feedback += "FAILED. distanceOne returned " + d1.size() + " words when it should have returned 5. ";
                 incorrect++;
@@ -38,7 +42,7 @@ public class NearbyWordsGrader {
             String expected[] = {"wore", "ward", "words", "worn", "lord"};
 
             boolean failed = false;
-            feedback += "** Test 2: distanceOne words returned... ";
+            feedback += appendFeedback(2, "distanceOne words returned");
             for (String i : expected) {
                 if (!d1.contains(i)) {
                     feedback += "FAILED. distanceOne does not return all expected words. ";
@@ -52,7 +56,7 @@ public class NearbyWordsGrader {
             }
             tests++;
 
-            feedback += "** Test 3: distanceOne list size (allowing non-words)... ";
+            feedback += appendFeedback(3, "distanceOne list size (allowing non-words)");
             d1 = nw.distanceOne("word", false);
             if (d1.size() != 230) {
                 feedback += "FAILED. distanceOne with non-words returned " + d1.size() + " words when it should have returned 230. ";
@@ -65,7 +69,7 @@ public class NearbyWordsGrader {
             
             d1 = new ArrayList<String>();
             
-            feedback += "** Test 4: deletions list size... ";
+            feedback += appendFeedback(4, "deletions list size");
             nw.deletions("makers", d1, true);
             if (d1.size() != 2) {
                 feedback += "FAILED. deletions returned " + d1.size() + " words when it should have returned 2. ";
@@ -76,7 +80,7 @@ public class NearbyWordsGrader {
             }
             tests++;
 
-            feedback += "** Test 5: deletions words returned... ";
+            feedback += appendFeedback(5, "deletions words returned");
             if (!(d1.contains("maker") && d1.contains("makes"))) {
                 feedback += "FAILED. The list returned by deletions does not contain the expected set of words. ";
                 incorrect++;
@@ -88,7 +92,7 @@ public class NearbyWordsGrader {
 
             d1 = new ArrayList<String>();
 
-            feedback += "** Test 6: insertions list size... ";
+            feedback += appendFeedback(6, "insertions list size");
             nw.insertions("or", d1, true);
             if (d1.size() != 3) {
                 feedback += "FAILED. insertions returned " + d1.size() + " words when it should have returned 3. ";
@@ -99,7 +103,7 @@ public class NearbyWordsGrader {
             }
             tests++;
 
-            feedback += "** Test 7: insertions words returned... ";
+            feedback += appendFeedback(7, "insertions words returned");
             if (!(d1.contains("ore") && d1.contains("tor") && d1.contains("oar"))) {
                 feedback += "FAILED. The list returned by insertions does not contain the expected set of words. ";
                 incorrect++;
@@ -110,15 +114,16 @@ public class NearbyWordsGrader {
             tests++;
             
         } catch (Exception e) {
-            out.println("{\"fractionalScore\": 0.0, \"feedback\": \"Runtime error: " + e + "\"}");
+            out.println("{\"fractionalScore\": 0.0, \"feedback\": \"" + feedback + "\\nRuntime error: " + e + "\"}");
+            out.close();
             return;
         }
 
         if (incorrect == 0) {
-            feedback = feedback + "Congrats! All tests passed.";
+            feedback = "Congrats! All tests passed.\\n" + feedback;
         }
         else {
-            feedback = "Some tests failed. Please check the following: " + feedback;
+            feedback = "Some tests failed. Please check the following: \\n" + feedback;
         }
 
         out.println("{\"fractionalScore\": " + (float)(tests - incorrect) / tests + ", \"feedback\": \"" + feedback + "\"}");

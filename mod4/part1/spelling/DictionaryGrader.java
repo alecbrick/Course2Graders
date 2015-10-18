@@ -3,6 +3,10 @@ package spelling;
 import java.io.PrintWriter;
 
 public class DictionaryGrader {
+    public static String appendFeedback(int num, String desc) {
+        return "\\n** Test #" + num + ": " + desc + "...";
+    }
+
     public static void main(String args[]) {
         PrintWriter out;
         try {
@@ -19,7 +23,7 @@ public class DictionaryGrader {
         try {
             Dictionary dictLL = new DictionaryLL();
 
-            feedback += "** Test #1: Adding new word to the LL dictionary...";
+            feedback += appendFeedback(1, "Adding new word to the LL dictionary");
             if (!dictLL.addWord("tEst")) {
                 incorrect++;
                 feedback += "FAILED. Adding a new word to the LL dictionary returned false. ";
@@ -28,7 +32,7 @@ public class DictionaryGrader {
                 feedback += "PASSED. ";
             }
 
-            feedback += "** Test #2: Adding a second word...";
+            feedback += appendFeedback(2, "Adding a second word");
             dictLL.addWord("second");
             if (dictLL.size() != 2) {
                 incorrect++;
@@ -38,7 +42,7 @@ public class DictionaryGrader {
                 feedback += "PASSED. ";
             }
 
-            feedback += "** Test #3: Looking up word from first test...";
+            feedback += appendFeedback(3, "Looking up word from first test");
             if (!dictLL.isWord("teSt")) {
                 incorrect++;
                 feedback += "FAILED. Inserted word is not found in LL dictionary. Make sure the word is converted to lowercase on both entry and lookup. ";
@@ -51,7 +55,7 @@ public class DictionaryGrader {
 
             Dictionary dictBST = new DictionaryBST();
 
-            feedback += "** Test #4: Adding a new word to the BST dictionary...";
+            feedback += appendFeedback(4, "Adding a new word to the BST dictionary");
             if (!dictBST.addWord("tEst")) {
                 incorrect++;
                 feedback += "FAILED. Adding a new word to the BST dictionary returned false. ";
@@ -60,7 +64,7 @@ public class DictionaryGrader {
                 feedback += "PASSED. ";
             }
 
-            feedback += "** Test #5: Adding second word to BST dictionary...";
+            feedback += appendFeedback(5, "Adding second word to BST dictionary");
             dictBST.addWord("second");
             if (dictBST.size() != 2) {
                 incorrect++;
@@ -70,7 +74,7 @@ public class DictionaryGrader {
                 feedback += "PASSED. ";
             }
 
-            feedback += "** Test #6: Retrieving the word from the last test...";
+            feedback += appendFeedback(6, "Retrieving the word from the last test");
             if (!dictBST.isWord("teSt")) {
                 incorrect++;
                 feedback += "FAILED. Inserted word is not found in BST dictionary. Make sure the word is converted to lowercase on both entry and lookup; ";
@@ -79,7 +83,7 @@ public class DictionaryGrader {
                 feedback += "PASSED. ";
             }
 
-            feedback += "** Test #7: Adding lots of words and retrieving some...";
+            feedback += appendFeedback(7, "Adding lots of words and retrieving some");
             dictBST.addWord("seconds");
             dictBST.addWord("seconded");
             dictBST.addWord("secondhand");
@@ -93,7 +97,7 @@ public class DictionaryGrader {
             }
             tests += 4;
 
-            feedback += "** Test #8: Testing non-word in DictLL...";
+            feedback += appendFeedback(8, "Testing non-word in DictLL");
 
             if (dictLL.isWord("soup")) {
                 incorrect++;
@@ -103,7 +107,7 @@ public class DictionaryGrader {
                 feedback += "PASSED. ";
             }
 
-            feedback += "** Test #9: Testing non-word in DictBST...";
+            feedback += appendFeedback(9, "Testing non-word in DictBST");
             if (dictBST.isWord("soup")) {
                 incorrect++;
                 feedback += "FAILED. 'soup' should not be a word. ";
@@ -114,16 +118,16 @@ public class DictionaryGrader {
             tests += 2;
 
         } catch (Exception e) {
-            out.println("{\"fractionalScore\": 0.0, \"feedback\": \"Runtime error: " + e + "\"}");
+            out.println("{\"fractionalScore\": 0.0, \"feedback\": \"" + feedback + "\\nRuntime error: " + e + "\"}");
             out.close();
             return;
         }
 
         if (incorrect == 0) {
-            feedback += "Congrats! You passed all the tests!";
+            feedback += "Congrats! You passed all the tests!\\n" + feedback;
         }
         else {
-            feedback = "Some tests failed. Please check the following: " + feedback;
+            feedback = "Some tests failed. Please check the following: \\n" + feedback;
         }
 
         out.println("{\"fractionalScore\": " + ((float)(tests - incorrect) / tests) + ", \"feedback\": \"" + feedback + "\"}");

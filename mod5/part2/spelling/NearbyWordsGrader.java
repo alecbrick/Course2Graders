@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.io.PrintWriter;
 
 public class NearbyWordsGrader {
+    public static String appendFeedback(int num, String desc) {
+        return "\\n** Test #" + num + ": " + desc + "...";
+    }
+
     public static void main(String args[]) {
         int tests = 0;
         int incorrect = 0;
@@ -23,7 +27,7 @@ public class NearbyWordsGrader {
             DictionaryLoader.loadDictionary(d, "dict.txt");
             NearbyWords nw = new NearbyWords(d);
 
-            feedback += "** Test 1: 2 suggestions... ";
+            feedback += appendFeedback(1, "2 suggestions");
             List<String> d1 = nw.suggestions("dag", 2);
             if (d1.size() != 2) {
                 feedback += "FAILED. " + d1.size() + " suggestions returned instead. ";
@@ -33,7 +37,7 @@ public class NearbyWordsGrader {
                 feedback += "PASSED: ";
             }
 
-            feedback += "** Test 2: Checking suggestion correctness... ";
+            feedback += appendFeedback(2, "Checking suggestion correctness");
             if (!(d1.contains("dog") && d1.contains("dogs"))) {
                 feedback += "FAILED. Suggestions don't contain expected set of words. ";
                 incorrect++;
@@ -43,7 +47,7 @@ public class NearbyWordsGrader {
             }
             tests += 2;
 
-            feedback += "** Test 3: 3 suggestions... ";
+            feedback += appendFeedback(3, "3 suggestions");
             d1 = nw.suggestions("fare", 3);
             if (d1.size() != 3) {
                 feedback += "FAILED. " + d1.size() + " suggestions returned instead. ";
@@ -53,7 +57,7 @@ public class NearbyWordsGrader {
                 feedback += "PASSED. ";
             }
 
-            feedback += "** Test 4: Checking suggestion correctness... ";
+            feedback += appendFeedback(4, "Checking suggestion correctness");
             if (!(d1.contains("fir") && d1.contains("fire") && d1.contains("fired"))) {
                 feedback += "FAILED. Suggestions don't contain expected set of words. ";
                 incorrect++;
@@ -67,15 +71,16 @@ public class NearbyWordsGrader {
 
             
         } catch (Exception e) {
-            out.println("{\"fractionalScore\": 0.0, \"feedback\": \"" + feedback + "Runtime error: " + e + "\"}");
+            out.println("{\"fractionalScore\": 0.0, \"feedback\": \"" + feedback + "\\nRuntime error: " + e + "\"}");
+            out.close();
             return;
         }
 
         if (incorrect == 0) {
-            feedback = feedback + "Congrats! All tests passed.";
+            feedback = "Congrats! All tests passed.\\n" + feedback;
         }
         else {
-            feedback = "Some tests failed. Please check the following: " + feedback;
+            feedback = "Some tests failed. Please check the following: \\n" + feedback;
         }
 
         out.println("{\"fractionalScore\": " + (float)(tests - incorrect) / tests + ", \"feedback\": \"" + feedback + "\"}");

@@ -11,8 +11,13 @@ public class MarkovTextGeneratorGrader {
         return "{\"fractionalScore\": " + score + ", \"feedback\": \"" + feedback + "\"}";
     }
 
+    public static String appendFeedback(int num, String desc) {
+        return "\\n** Test #" + num + ": " + desc + "...";
+    }
+
     public static void main(String[] args) {
         PrintWriter f;
+        String feedback = "";
         try {
             f = new PrintWriter("output.out");
         } catch (Exception e) {
@@ -24,9 +29,8 @@ public class MarkovTextGeneratorGrader {
             
             int incorrect = 0;
             int tests = 0;
-            String feedback = "";
 
-            feedback += "\\n** Test 1: Generating text before training...";
+            feedback += appendFeedback(1, "Generating text before training");
             try {
                 String s = gen.generateText(20);
                 feedback += "PASSED. ";
@@ -37,7 +41,7 @@ public class MarkovTextGeneratorGrader {
             tests++;
 
             gen.train("");
-            feedback += "\\n** Test 2: Generating text after training on an empty file...";
+            feedback += appendFeedback(2, "Generating text after training on an empty file");
             try {
                 String s = gen.generateText(20);
                 feedback += "PASSED. ";
@@ -52,7 +56,7 @@ public class MarkovTextGeneratorGrader {
             String res = gen.generateText(LENGTH);
 
             String[] words = res.split("[\\s]+");
-            feedback += "\\n** Test #3: Checking requested generator word count...";
+            feedback += appendFeedback(3, "Checking requested generator word count");
             if (res.split("[\\s]+").length != LENGTH) {
                 incorrect++;
                 feedback += "FAILED. Your generator produced " + res.split("[\\s]+").length + " words when it should have produced " + LENGTH + ". ";
@@ -73,7 +77,7 @@ public class MarkovTextGeneratorGrader {
                 }
             }
 
-            feedback += "\\n** Test #4: Testing specific word counts...";
+            feedback += appendFeedback(4, "Testing specific word counts");
             if (wordCounts.get("I") < LENGTH / 2) {
                 incorrect++;
                 feedback += "FAILED. The expected word count of certain words isn't high enough. ";
@@ -84,7 +88,7 @@ public class MarkovTextGeneratorGrader {
             tests++;
 
             boolean found = true;
-            feedback += "\\n** Test #5: Checking that every word is used at least once...";
+            feedback += appendFeedback(5, "Checking that every word is used at least once");
             for (String w : input.split(" ")) {
                 if (!wordCounts.containsKey(w)) {
                     incorrect++;
@@ -99,7 +103,7 @@ public class MarkovTextGeneratorGrader {
             tests++;
 
             found = true;
-            feedback += "\\n** Test 6: Seeing if last word is always followed by first word...";
+            feedback += appendFeedback(6, "Seeing if last word is always followed by first word");
             for (int i = 0; i < words.length; i++) {
                 if (words[i].equals("socks.")) {
                     if (i + 1 < words.length && !words[i + 1].equals("I")) {
@@ -115,7 +119,7 @@ public class MarkovTextGeneratorGrader {
             }
             tests++;
 
-            feedback += "\\n** Test #7: Requesting zero words...";
+            feedback += appendFeedback(7, "Requesting zero words");
             if (!gen.generateText(0).equals("")) {
                 incorrect++;
                 feedback += "FAILED. The text generator shouldn't produce anything when zero words are requested. ";
@@ -129,7 +133,7 @@ public class MarkovTextGeneratorGrader {
             res = gen.generateText(LENGTH);
             words = res.split("[\\s]+");
             int i = 0;
-            feedback += "\\n** Test #8: Running train() on a generator that has already been trained...";
+            feedback += appendFeedback(8, "Running train() on a generator that has already been trained");
             for (String w : words) {
                 if (w.equals("I")) {
                     i++;
@@ -146,7 +150,7 @@ public class MarkovTextGeneratorGrader {
             tests++;
 
             gen.retrain("");
-            feedback += "\\nTest #9: Testing retrain()...";
+            feedback += appendFeedback(9, "Testing retrain()");
             String s = gen.generateText(20);
             if(s.split("[\\s]+").length != 0 && s.length() != 0) {
                 incorrect++;
@@ -168,7 +172,7 @@ public class MarkovTextGeneratorGrader {
             f.close();
             return;
         } catch (Exception e) {
-            f.println(makeJson(0.0, "Error during runtime: " + e));
+            f.println(makeJson(0.0, feedback + "\\nError during runtime: " + e));
             f.close();
         }
     }

@@ -1,5 +1,8 @@
 import subprocess
 
+def appendFeedback(num, test):
+    return "\\nTest #%s: %s..." % (num, test)
+
 def runTest(f):
     subprocess.call(["cp", f, "textgen/MyLinkedList.java"])
     p = subprocess.Popen(["javac -cp .:/usr/share/java/junit4.jar textgen/*.java"], shell=True, stderr=subprocess.PIPE)
@@ -31,81 +34,81 @@ def main():
             return
 
         if i == 1:
-            feedback += "** Test #1: Lower bounds on get..."
+            feedback += appendFeedback(1, "Lower bounds on get")
             if s == 0:
                 feedback += "FAILED. Make sure you can't get an element at too low of an index. "
             else:
                 feedback += "PASSED. "
         elif i == 2:    
-            feedback += "** Test #2: Upper bounds on get..."
+            feedback += appendFeedback(2, "Upper bounds on get")
             if s == 0:
                 feedback += "Make sure you can't get an element at too high of an index. "
             else:
                 feedback += "PASSED. "
         elif i == 3:
-            feedback += "** Test #3: Lower bounds on set..."
+            feedback += appendFeedback(3, "Lower bounds on set")
             if s == 0:
                 feedback += "FAILED. Check that you can't set an element at too low of an index. "
             else:
                 feedback += "PASSED. "
 
         elif i == 4:
-            feedback += "** Test #4: Upper bounds on set..."
+            feedback += appendFeedback(4, "Upper bounds on set")
             if s == 0:
                 feedback += "FAILED. Check that you can't set an element at too high of an index. "
             else:
                 feedback += "PASSED. "
         elif i == 5:
-            feedback += "** Test #5: Lower bounds on remove..."
+            feedback += appendFeedback(5, "Lower bounds on remove")
             if s == 0:
                 feedback += "FAILED. Ensure that you can't remove an element at too low of an index. "
             else:
                 feedback += "PASSED. "
         elif i == 6:
-            feedback += "** Test #6: Upper bounds on remove..."
+            feedback += appendFeedback(6, "Upper bounds on remove")
             if s == 0:
                 feedback += "FAILED. Ensure that you can't remove an element at too high of an index. "
             else:
                 feedback += "PASSED. "
         elif i == 7:
-            feedback += "** Test #7: Lower bounds on add..."
+            feedback += appendFeedback(7, "Lower bounds on add")
             if s == 0:
                 feedback += "FAILED. Make sure that you can't add an element at too low of an index. "
             else:
                 feedback += "PASSED. "
         elif i == 8:
-            feedback += "** Test #8: Correctly updating 'next' pointer on add..."
+            feedback += appendFeedback(8, "Correctly updating 'next' pointer on add")
             if s == 0:
                 feedback += "FAILED. No checks to see if 'next' pointers are updated correctly on add. "
             else:
                 feedback += "PASSED. "
         elif i == 9:
-            feedback += "** Test #9: Upper bounds on add..."
+            feedback += appendFeedback(9, "Upper bounds on add")
             if s == 0:
                 feedback += "FAILED. Make sure that you can't add an element at too high of an index. "
             else:
                 feedback += "PASSED. "
         elif i == 10:
-            feedback += "** Test #10: Correctly updating 'next' pointer on remove..."
+            feedback += appendFeedback(10, "Correctly updating 'next' pointer on remove")
             if s == 0:
                 feedback += "FAILED. No checks to see if 'next' pointers are updated correctly on remove. "
             else:
                 feedback += "PASSED. "
         elif i == 11:
-            feedback += "** Test #11: Setting null element..."
+            feedback += appendFeedback(11, "Setting null element")
             if s == 0:
                 feedback += "FAILED. Check that you can't set an element to null. "
             else:
                 feedback += "PASSED. "
         elif i == 12:
-            feedback += "** Test #12: Adding null element..."
+            feedback += appendFeedback(12, "Adding null element")
             if s == 0:
                 feedback += "FAILED. Check that you can't add a null element. "
             else:
                 feedback += "PASSED. "
         successCount += s
 
-    feedback += "** Test #13: Running on correct implementation..."
+    feedback += appendFeedback(13, "Running on correct implementation")
     s, err = runTest("MyLinkedList.java")
     if s == 0:
         successCount += 1
@@ -118,9 +121,9 @@ def main():
 
 
     if successCount == 13:
-        feedback += "All tests passed. Congrats!"
+        feedback = "All tests passed. Congrats!\\n\\n%s" % feedback
     else:
-        feedback = "Some tests failed. Check the following: %s" % feedback
+        feedback = "Some tests failed. Check the following: \\n\\n%s" % feedback
 
     print "{\"fractionalScore\": %s, \"feedback\": \"%s\"}" % (successCount / 13.0, feedback)
 
