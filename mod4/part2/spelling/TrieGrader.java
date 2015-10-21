@@ -55,10 +55,10 @@ public class TrieGrader {
         int incorrect = g.getIncorrect();
             
         if (incorrect == 0) {
-            feedback.append("Congrats! All tests passed. ");
+            feedback.insert(0,"Congrats! All tests passed. :)\\n\\n");
         }
         else {
-            feedback.insert(0, "Some tests failed. Please check the following");
+            feedback.insert(0, "Some tests failed. Please check tests marked FAILED: \\n\\n");
         }
             
         out.println(g.makeJson((double)(tests - incorrect) / tests, feedback.toString()));
@@ -67,7 +67,7 @@ public class TrieGrader {
 
 
     private void testAddWords(AutoCompleteDictionaryTrie ac) {
-        feedback.append( "//TESTING ADDING WORDS (addWord, insert)// ");
+        feedback.append( "//TESTING ADDING WORDS (addWord)// ");
         appendTestString(1, "Adding first word to dictionary...");
         if (!ac.addWord("dog")) {
             feedback.append("FAILED. Simple word add failed ");
@@ -118,7 +118,7 @@ public class TrieGrader {
         ac.addWord("testcases");
 
         if (ac.size() != 24) {
-            feedback.append("FAILED. Incorrect size after adding list: expected 24, got " + ac.size() + " ");
+            feedback.append("FAILED. Incorrect size after adding many words: expected 24, got " + ac.size() + " ");
             incorrect++;
         }
         else {
@@ -155,7 +155,7 @@ public class TrieGrader {
 
     private void testWordsInOut(AutoCompleteDictionaryTrie ac) {
 
-        feedback.append(" //TESTING FOR WORDS IN/OUT OF DICTIONARY (isWord)//");
+        feedback.append(" \\n\\n//TESTING FOR WORDS IN/OUT OF DICTIONARY (isWord)//");
         appendTestString(6,"Checking empty string...");
         // test empty string
         if(ac.isWord("")) {
@@ -170,7 +170,7 @@ public class TrieGrader {
 
         appendTestString(7, "Checking for word in dictionary...");
         if (!ac.isWord("doggoes")) {
-            feedback.append("FAILED. Can't find word inserted from a list ");
+            feedback.append("FAILED. Can't find word added in dictionary");
             incorrect++;
         }
         else {
@@ -235,7 +235,7 @@ public class TrieGrader {
 
     private void testPredictions(AutoCompleteDictionaryTrie ac) {
 
-        feedback.append(" //TESTING AUTO COMPLETE FUNCTIONALITY (predictCompletions)//");
+        feedback.append("\\n\\n//TESTING AUTO COMPLETE FUNCTIONALITY (predictCompletions)//");
         List<String> auto = ac.predictCompletions("dog", 3);
         
         appendTestString(12, "3 completions requested...");
@@ -374,7 +374,7 @@ public class TrieGrader {
     }
 
     private void appendTestString(int num, String description) {
-        feedback.append("** Test #" + num + ": " + description);
+        feedback.append("\\n** Test #" + num + ": " + description);
     }
 
     private int getIncorrect() {
