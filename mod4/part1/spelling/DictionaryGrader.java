@@ -124,7 +124,7 @@ public class DictionaryGrader {
         }
 
         if (incorrect == 0) {
-            feedback += "Congrats! You passed all the tests!\\n" + feedback;
+            feedback = "Congrats! You passed all the tests!\\n" + feedback;
         }
         else {
             feedback = "Some tests failed. Please check the following: \\n" + feedback;

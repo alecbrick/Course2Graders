@@ -65,7 +65,7 @@ public class DocumentBenchmarking {
                                 seconds2 = ((double )endTime2 - startTime2) / 1000000000;
 
                                 if (seconds >= seconds2) {
-                                        out.println("{ \"fractionalScore\": 0.0, \"feedback\":\"Your BasicDocument is slower than your EfficientDocument.\" }");
+                                        out.println("{ \"fractionalScore\": 0.0, \"feedback\":\"Your EfficientDocument, which took " + seconds + " seconds, is not faster than your BasicDocument, which took " + seconds2 + " seconds.\" }");
                                         out.close();
                                         return;
                                 }

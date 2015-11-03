@@ -70,6 +70,7 @@ public class WPTreeGrader {
             else {
                 feedback += "PASSED. ";
             }
+            tests++;
 
             path = tree.findPath("foal", "needless");
 
@@ -81,6 +82,7 @@ public class WPTreeGrader {
             else {
                 feedback += "PASSED. ";
             }
+            tests++;
 
             path = tree.findPath("needle", "kitten");
             
@@ -92,6 +94,7 @@ public class WPTreeGrader {
             else {
                 feedback += "PASSED. ";
             }
+            tests++;
         } catch (Exception e) {
             out.println("{\"fractionalScore\": 0.0, \"feedback\": \"" + feedback + "\\nError during runtime: " + e + "\"}");
         }
