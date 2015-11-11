@@ -46,19 +46,19 @@ public class DocumentBenchmarking {
                                 test = getStringFromFile(s,numToCheck);
                                 //System.out.println(test);
                         
+                                Document b = new EfficientDocument(test);
                                 startTime = System.nanoTime();
                                 for(int i = 0;  i< TRIALS; i++) {
-                                        Document b = new EfficientDocument(test);
                                         //Document b = new BasicDocument(test);
                                         b.getFleschScore();
                                 }
                                 endTime = System.nanoTime();
                                 seconds = ((double )endTime - startTime) / 1000000000;
                         
+                                b = new BasicDocument(test);
                                 startTime2 = System.nanoTime();
                                 for(int i = 0;  i< TRIALS; i++) {
                                         //Document b = new EfficientDocument(test);
-                                        Document b = new BasicDocument(test);
                                         b.getFleschScore();
                                 }
                                 endTime2 = System.nanoTime();
