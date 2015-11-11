@@ -5,17 +5,36 @@ import java.util.HashMap;
 import java.io.PrintWriter;
 
 public class MarkovTextGeneratorGrader {
-    private static final int LENGTH = 500;
+    private final int LENGTH = 500;
 
-    public static String makeJson(double score, String feedback) {
+    public String makeJson(double score, String feedback) {
         return "{\"fractionalScore\": " + score + ", \"feedback\": \"" + feedback + "\"}";
     }
 
-    public static String appendFeedback(int num, String desc) {
+    public String appendFeedback(int num, String desc) {
         return "\\n** Test #" + num + ": " + desc + "...";
     }
 
+    // For generating text after an empty string (sometimes causes an infinite loop
+    private class TextGenerator implements Runnable {
+        MarkovTextGenerator gen;
+
+        public TextGenerator(MarkovTextGenerator gen) {
+            this.gen = gen;
+        }
+
+        @Override
+        public void run() {
+            gen.generateText(20);
+        }
+    }
+
     public static void main(String[] args) {
+        MarkovTextGeneratorGrader gr = new MarkovTextGeneratorGrader();
+        gr.runTests();
+    }
+
+    public void runTests() {
         PrintWriter f;
         String feedback = "";
         try {
@@ -42,12 +61,35 @@ public class MarkovTextGeneratorGrader {
 
             gen.train("");
             feedback += appendFeedback(2, "Generating text after training on an empty file");
-            try {
-                String s = gen.generateText(20);
-                feedback += "PASSED. ";
-            } catch (Exception e) {
+
+            Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
+                    public void uncaughtException(Thread th, Throwable ex) {
+                    }
+            };
+
+            Thread thread = new Thread(new TextGenerator(gen));
+            thread.setUncaughtExceptionHandler(h);
+            thread.start();
+            long endTimeMillis = System.currentTimeMillis() + 5000;
+            boolean infinite = false;
+            while (thread.isAlive()) {
+                if (System.currentTimeMillis() > endTimeMillis) {
+                    thread.stop();
+                    infinite = true;
+                    break;
+                }
+            }
+            if (infinite) {
                 incorrect++;
-                feedback += "FAILED. Make sure that your program doesn't crash when generating text after being trained with an empty file; ";
+                feedback += "FAILED. Your program created an infinite loop.";
+            } else {
+                try {
+                    gen.generateText(20);
+                    feedback += "PASSED. ";
+                } catch (Exception e) {
+                    incorrect++;
+                    feedback += "FAILED. Make sure that your program doesn't crash when generating text after being trained with an empty file. ";
+                }
             }
             tests++;
 
@@ -151,13 +193,38 @@ public class MarkovTextGeneratorGrader {
 
             gen.retrain("");
             feedback += appendFeedback(9, "Testing retrain()");
-            String s = gen.generateText(20);
-            if(s.split("[\\s]+").length != 0 && s.length() != 0) {
-                incorrect++;
-                feedback += "FAILED. Ensure that retrain() removes the original word lists. ";
+            thread = new Thread(new TextGenerator(gen));
+            thread.setUncaughtExceptionHandler(h);
+            thread.start();
+            endTimeMillis = System.currentTimeMillis() + 5000;
+            infinite = false;
+            while (thread.isAlive()) {
+                if (System.currentTimeMillis() > endTimeMillis) {
+                    thread.stop();
+                    infinite = true;
+                    break;
+                }
             }
+
+            if (infinite) {
+                incorrect++;
+                feedback += "FAILED. Your program created an infinite loop.";
+            } 
             else {
-                feedback += "PASSED. ";
+                try {
+                    String s = gen.generateText(20);
+                    if (s.split("[\\s]+").length != 0 && s.length() != 0) {
+                        incorrect++;
+                        feedback += "FAILED. Ensure that retrain() removes the original word lists. ";
+                    }
+                    else {
+                        feedback += "PASSED. ";
+                    }
+                }
+                catch (Exception e) {
+                    incorrect++;
+                    feedback += "FAILED. Make sure that your program doesn't crash when generating text after being trained with an empty file. ";
+                }
             }
             tests++;
 

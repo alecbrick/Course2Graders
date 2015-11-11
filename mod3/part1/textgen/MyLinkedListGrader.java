@@ -296,7 +296,7 @@ public class MyLinkedListGrader {
                                 feedback = "Some test cases failed. Please check the following: \\n\\n" + feedback;
                         }
                 } catch (Exception e) {
-                        out.println("{\"fractionalScore\": 0.0, \"feedback\": \"Error during runtime: " + e + "\"}");
+                        out.println("{\"fractionalScore\": 0.0, \"feedback\": \""+ feedback + "Error during runtime: " + e + "\"}");
                         out.close();
                         return;
                 }
