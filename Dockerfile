@@ -1,11 +1,9 @@
-FROM ubuntu:latest
+FROM java:openjdk-8u66-jdk
 
-RUN \
-    apt-get update && \
-    apt-get install -y openjdk-7-jdk
-
+RUN apt-get update
 RUN apt-get install -y zip
 RUN apt-get install -y junit4
+RUN apt-get install -y python
 
 RUN mkdir /shared
 RUN mkdir /shared/submission
