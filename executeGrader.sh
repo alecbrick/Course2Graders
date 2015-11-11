@@ -37,8 +37,11 @@ if [ "$PARTID" == "$MOD2_PART2_ID" ]; then
   FILENAME="document.DocumentBenchmarking"
   unzip /shared/submission/mod2.zip -d zipfile > /dev/null
   cd zipfile
-  cp * ../mod2/document/ 
-  cd ../"$GRADER_DIRECTORY"
+  if [ ! -f "EfficientDocument.java" ]; then
+    cd *
+  fi
+  cp * /grader/"$GRADER_DIRECTORY"/document/ 
+  cd /grader/"$GRADER_DIRECTORY"
   javac -encoding ISO-8859-1 -sourcepath document document/*.java 2>errorfile
 elif [ "$PARTID" == "$MOD3_PART1_1_ID" ]; then
   GRADER_DIRECTORY=mod3/part1
@@ -64,8 +67,11 @@ elif [ "$PARTID" == "$MOD4_PART1_ID" ]; then
   FILENAME="spelling.DictionaryGrader"
   unzip /shared/submission/mod4part1.zip -d zipfile > /dev/null
   cd zipfile
-  cp * ../mod4/part1/spelling
-  cd ../$GRADER_DIRECTORY
+  if [ ! -f "DictionaryLL.java" ]; then
+    cd *
+  fi
+  cp * /grader/mod4/part1/spelling
+  cd /grader/"$GRADER_DIRECTORY"
   javac -encoding ISO-8859-1 spelling/*.java 2>errorfile
 elif [ "$PARTID" == "$MOD4_PART2_ID" ]; then
   GRADER_DIRECTORY=mod4/part2
