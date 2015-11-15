@@ -15,7 +15,7 @@ def runTest(f):
         if err != "":
             return -1, err
         if "FAILURES" in out:
-            return 1, ""
+            return 1, out
         else:
             return 0, ""
     except Exception as e:
@@ -30,7 +30,7 @@ def main():
             print "{\"fractionalScore\": 0.0, \"feedback\": \"Uncaught runtime exception: %s\"}" % err
             return
         elif s == -2:
-            print "{\"fractionalScore\": 0.0, \"feedback\": \"Error during compilation: %s\"}" % err
+            print "{\"fractionalScore\": 0.0, \"feedback\": \"Error during compilation: %s\"}" % err.replace("\n", "\\n").replace("\"", "\\\"").replace("\t", "\\t")
             return
 
         if i == 1:
@@ -114,7 +114,7 @@ def main():
         successCount += 1
         feedback += "PASSED. "
     elif s == 1:
-        feedback += "FAILED. Your tester failed against the correct implementation."
+        feedback += "FAILED. Your tester failed against the correct implementation: \\n%s" % err.replace("\n", "\\n").replace("\"", "\\\"").replace("\t", "\\t")
     elif s == -1:
         print "{\"fractionalScore\": 0.0, \"feedback\": \"Uncaught runtime exception: %s.\"}" % err
         return
@@ -125,7 +125,7 @@ def main():
     else:
         feedback = "Some tests failed. Check the following: \\n\\n%s" % feedback
 
-    print "{\"fractionalScore\": %s, \"feedback\": \"%s\"}" % (successCount / 13.0, feedback)
+    print "{\"fractionalScore\": %s, \"feedback\": \"%s\"}" % (max(0, (successCount - .01) / 13.0), feedback)
 
 if __name__ == "__main__":
     main()

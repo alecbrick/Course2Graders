@@ -18,10 +18,12 @@ public class MyLinkedListGrader {
 		else
 			curr = lst.head;
 		
-		while (curr != null && curr.data != null)
+                int count = 0;
+		while (curr != null && curr.data != null && count < lst.size())
 		{
 			ret += curr.data;
 			curr = curr.next;
+                        count++;
 		}
                 return ret;
 	}
@@ -33,10 +35,13 @@ public class MyLinkedListGrader {
 			curr = lst.tail.prev;
 		else
 			curr = lst.tail;
-		while (curr != null && curr.data != null)
+
+                int count = 0;
+		while (curr != null && curr.data != null && count < lst.size())
 		{
 		        ret += curr.data;
 			curr = curr.prev;
+                        count++;
 		}
                 return ret;
 	}
