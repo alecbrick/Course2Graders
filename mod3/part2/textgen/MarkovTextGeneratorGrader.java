@@ -4,8 +4,13 @@ import java.util.Random;
 import java.util.HashMap;
 import java.io.PrintWriter;
 
-public class MarkovTextGeneratorGrader {
+public class MarkovTextGeneratorGrader implements Runnable{
     private final int LENGTH = 500;
+
+    PrintWriter f;
+    String feedback = "";
+    public int correct = 0;
+    public static int tests = 9;
 
     public String makeJson(double score, String feedback) {
         return "{\"fractionalScore\": " + score + ", \"feedback\": \"" + feedback + "\"}";
@@ -13,6 +18,14 @@ public class MarkovTextGeneratorGrader {
 
     public String appendFeedback(int num, String desc) {
         return "\\n** Test #" + num + ": " + desc + "...";
+    }
+
+    public PrintWriter getOutfile() {
+        return f;
+    }
+
+    public String getFeedback() {
+        return feedback;
     }
 
     // For generating text after an empty string (sometimes causes an infinite loop
@@ -31,14 +44,35 @@ public class MarkovTextGeneratorGrader {
         }
     }
 
+    @Override
+    public void run() {
+        this.runTests();
+    }
+
     public static void main(String[] args) {
         MarkovTextGeneratorGrader gr = new MarkovTextGeneratorGrader();
-        gr.runTests();
+        Thread thread = new Thread(gr);
+        thread.start();
+        long endTimeMillis = System.currentTimeMillis() + 10000;
+        boolean infinite = false;
+        while(thread.isAlive()) {
+            if (System.currentTimeMillis() > endTimeMillis) {
+                thread.stop();
+                infinite = true;
+                break;
+            }
+        }
+        String feedback = gr.getFeedback();
+        PrintWriter out = gr.getOutfile();
+        if (infinite) {
+            feedback += "\\nYour code created an infinite loop.";
+        }
+        
+        out.println(gr.makeJson((double)gr.correct / tests, feedback));
+        out.close();
     }
 
     public void runTests() {
-        PrintWriter f;
-        String feedback = "";
         try {
             f = new PrintWriter("output.out");
         } catch (Exception e) {
@@ -48,107 +82,46 @@ public class MarkovTextGeneratorGrader {
         try {
             MarkovTextGenerator gen = new MarkovTextGeneratorLoL(new Random());
             
-            int incorrect = 0;
-            int tests = 0;
-
             Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
                     public void uncaughtException(Thread th, Throwable ex) {
                     }
             };
 
             feedback += appendFeedback(1, "Generating text before training");
-            Thread thread = new Thread(new TextGenerator(gen, 20));
-            thread.setUncaughtExceptionHandler(h);
-            thread.start();
-            long endTimeMillis = System.currentTimeMillis() + 5000;
-            boolean infinite = false;
-            while (thread.isAlive()) {
-                if (System.currentTimeMillis() > endTimeMillis) {
-                    thread.stop();
-                    infinite = true;
-                    break;
-                }
+
+            try {
+                String s = gen.generateText(20);
+                feedback += "PASSED. ";
+                correct++;
+            } catch (Exception e) {
+                feedback += "FAILED. Check that your program doesn't crash when the generator tries to generate text without being trained. ";
             }
 
-            if (infinite) {
-                feedback += "FAILED. Infinite loop generated. ";
-                incorrect++;
-            } else {
-                try {
-                    String s = gen.generateText(20);
-                    feedback += "PASSED. ";
-                } catch (Exception e) {
-                    incorrect++;
-                    feedback += "FAILED. Check that your program doesn't crash when the generator tries to generate text without being trained. ";
-                }
-            }
-            tests++;
-
-            gen.train("");
             feedback += appendFeedback(2, "Generating text after training on an empty file");
+            gen.train("");
 
-
-            thread = new Thread(new TextGenerator(gen, 20));
-            thread.setUncaughtExceptionHandler(h);
-            thread.start();
-            endTimeMillis = System.currentTimeMillis() + 5000;
-            infinite = false;
-            while (thread.isAlive()) {
-                if (System.currentTimeMillis() > endTimeMillis) {
-                    thread.stop();
-                    infinite = true;
-                    break;
-                }
+            try {
+                gen.generateText(20);
+                feedback += "PASSED. ";
+                correct++;
+            } catch (Exception e) {
+                feedback += "FAILED. Make sure that your program doesn't crash when generating text after being trained with an empty file. ";
             }
-            if (infinite) {
-                incorrect++;
-                feedback += "FAILED. Your program created an infinite loop.";
-            } else {
-                try {
-                    gen.generateText(20);
-                    feedback += "PASSED. ";
-                } catch (Exception e) {
-                    incorrect++;
-                    feedback += "FAILED. Make sure that your program doesn't crash when generating text after being trained with an empty file. ";
-                }
-            }
-            tests++;
 
+            feedback += appendFeedback(3, "Training on input, then checking requested generator word count");
             String input = "I love cats. I hate dogs. I I I I I I I I I I I I I I I I love cats. I I I I I I I I I I I I I I I I hate dogs. I I I I I I I I I like books. I love love. I am a text generator. I love cats. I love cats. I love cats. I love love love socks.";
             gen.retrain(input);
             
-            thread = new Thread(new TextGenerator(gen, 20));
-            thread.setUncaughtExceptionHandler(h);
-            thread.start();
-            endTimeMillis = System.currentTimeMillis() + 5000;
-            infinite = false;
-            while (thread.isAlive()) {
-                if (System.currentTimeMillis() > endTimeMillis) {
-                    thread.stop();
-                    infinite = true;
-                    break;
-                }
-            }
-
-            String res;
-            if (infinite) {
-                feedback += "\\nWARNING: Infinite loop created while attempting to generate text after training on normal input.";
-                res = "";
-            } else {
-                res = gen.generateText(LENGTH);
-                System.out.println(res);
-            }
+            String res = gen.generateText(LENGTH);
 
             String[] words = res.split("[\\s]+");
-            feedback += appendFeedback(3, "Checking requested generator word count");
             if (res.split("[\\s]+").length != LENGTH) {
-                incorrect++;
                 feedback += "FAILED. Your generator produced " + res.split("[\\s]+").length + " words when it should have produced " + LENGTH + ". ";
             }
             else {
                 feedback += "PASSED. ";
+                correct++;
             }
-            tests++;
 
             HashMap<String, Integer> wordCounts = new HashMap<String, Integer>();
 
@@ -163,19 +136,17 @@ public class MarkovTextGeneratorGrader {
 
             feedback += appendFeedback(4, "Testing specific word counts");
             if (wordCounts.get("I") == null || wordCounts.get("I") < LENGTH / 2) {
-                incorrect++;
                 feedback += "FAILED. The expected word count of certain words isn't high enough. ";
             }
             else {
                 feedback += "PASSED. ";
+                correct++;
             }
-            tests++;
 
             boolean found = true;
             feedback += appendFeedback(5, "Checking that every word is used at least once");
             for (String w : input.split(" ")) {
                 if (!wordCounts.containsKey(w)) {
-                    incorrect++;
                     found = false;
                     feedback += "FAILED. Your generator doesn't produce every possible word. ";
                     break;
@@ -183,15 +154,14 @@ public class MarkovTextGeneratorGrader {
             }
             if (found) {
                 feedback += "PASSED. ";
+                correct++;
             }
-            tests++;
 
             found = true;
             feedback += appendFeedback(6, "Seeing if last word is always followed by first word");
             for (int i = 0; i < words.length; i++) {
                 if (words[i].equals("socks.")) {
                     if (i + 1 < words.length && !words[i + 1].equals("I")) {
-                        incorrect++;
                         found = false;
                         feedback += "FAILED. Make sure that the last word of the input file is always followed by the first. ";
                         break;
@@ -199,130 +169,67 @@ public class MarkovTextGeneratorGrader {
                 }
             }
             if (words.length == 0) {
-                incorrect++;
-                feedback += "FAILED. Could not run this test because of the infinite loop. ";
+                feedback += "FAILED. Your generator generated no text to test this with. ";
             } else if (found) {
                 feedback += "PASSED. ";
+                correct++;
             }
-            tests++;
 
             feedback += appendFeedback(7, "Requesting zero words");
-            thread = new Thread(new TextGenerator(gen, 0));
-            thread.setUncaughtExceptionHandler(h);
-            thread.start();
-            endTimeMillis = System.currentTimeMillis() + 5000;
-            infinite = false;
-            while (thread.isAlive()) {
-                if (System.currentTimeMillis() > endTimeMillis) {
-                    thread.stop();
-                    infinite = true;
-                    break;
-                }
+            if (!gen.generateText(0).equals("")) {
+                feedback += "FAILED. The text generator shouldn't produce anything when zero words are requested. ";
             }
-            if (infinite) {
-                incorrect++;
-                feedback += "FAILED. Infinite loop created. ";
-            } else {
-                if (!gen.generateText(0).equals("")) {
-                    incorrect++;
-                    feedback += "FAILED. The text generator shouldn't produce anything when zero words are requested. ";
-                }
-                else {
+            else {
                 feedback += "PASSED. ";
-                }
+                correct++;
             }
-            tests++;
 
             feedback += appendFeedback(8, "Running train() on a generator that has already been trained");
             gen.train("");
 
-            thread = new Thread(new TextGenerator(gen, 20));
-            thread.setUncaughtExceptionHandler(h);
-            thread.start();
-            endTimeMillis = System.currentTimeMillis() + 5000;
-            infinite = false;
-            while (thread.isAlive()) {
-                if (System.currentTimeMillis() > endTimeMillis) {
-                    thread.stop();
-                    infinite = true;
-                    break;
+            res = gen.generateText(LENGTH);
+            words = res.split("[\\s]+");
+            int i = 0;
+            for (String w : words) {
+                if (w.equals("I")) {
+                    i++;
                 }
             }
-            if (infinite) {
-                feedback += "FAILED. Infinite loop when generating text after running train(\\\"\\\")";
-                incorrect++;
-            }
 
+            if (i < LENGTH / 2) {
+                feedback += "FAILED. Make sure that train() doesn't remove the original word lists. Note that if Test #4 failed, this one will fail too. ";
+            }
             else {
-                res = gen.generateText(LENGTH);
-                words = res.split("[\\s]+");
-                int i = 0;
-                for (String w : words) {
-                    if (w.equals("I")) {
-                        i++;
-                    }
-                }
+                feedback += "PASSED. ";
+                correct++;
+            }
 
-                if (i < LENGTH / 2) {
-                    incorrect++;
-                    feedback += "FAILED. Make sure that train() doesn't remove the original word lists. Note that if Test #4 failed, this one will fail too. ";
+            feedback += appendFeedback(9, "Testing retrain()");
+            gen.retrain("");
+            try {
+                String s = gen.generateText(20);
+                if (s.split("[\\s]+").length != 0 && s.length() != 0) {
+                    feedback += "FAILED. Ensure that retrain() removes the original word lists. ";
                 }
                 else {
                     feedback += "PASSED. ";
-                }
-                tests++;
-            }
-
-            gen.retrain("");
-            feedback += appendFeedback(9, "Testing retrain()");
-            thread = new Thread(new TextGenerator(gen, 20));
-            thread.setUncaughtExceptionHandler(h);
-            thread.start();
-            endTimeMillis = System.currentTimeMillis() + 5000;
-            infinite = false;
-            while (thread.isAlive()) {
-                if (System.currentTimeMillis() > endTimeMillis) {
-                    thread.stop();
-                    infinite = true;
-                    break;
+                    correct++;
                 }
             }
-
-            if (infinite) {
-                incorrect++;
-                feedback += "FAILED. Your program created an infinite loop.";
-            } 
-            else {
-                try {
-                    String s = gen.generateText(20);
-                    if (s.split("[\\s]+").length != 0 && s.length() != 0) {
-                        incorrect++;
-                        feedback += "FAILED. Ensure that retrain() removes the original word lists. ";
-                    }
-                    else {
-                        feedback += "PASSED. ";
-                    }
-                }
-                catch (Exception e) {
-                    incorrect++;
-                    feedback += "FAILED. Make sure that your program doesn't crash when generating text after being trained with an empty file. ";
-                }
+            catch (Exception e) {
+                feedback += "FAILED. Make sure that your program doesn't crash when generating text after being trained with an empty file. ";
             }
-            tests++;
 
-            if (incorrect == 0) {
+            if (correct == tests) {
                 feedback = "Congrats! You passed all the tests. \\n\\n" + feedback;
             }
             else {
                 feedback = "Some tests failed. Please check the tests marked FAILED: \\n\\n" + feedback;
             }
 
-            f.println(makeJson((double)(tests - incorrect) / tests, feedback));
-            f.close();
             return;
         } catch (Exception e) {
-            f.println(makeJson(0.0, feedback + "\\nError during runtime: " + e));
-            f.close();
+            feedback += "\\nError during runtime: " + e;
         }
     }
 }

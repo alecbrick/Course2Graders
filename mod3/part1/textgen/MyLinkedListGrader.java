@@ -4,10 +4,15 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
-public class MyLinkedListGrader {
+public class MyLinkedListGrader implements Runnable {
 	
 	PrintWriter out;
         String feedback;
+
+        @Override
+        public void run() {
+                this.doTest();
+        }
 	
 	public String printListForwards(MyLinkedList<Integer> lst)
 	{
@@ -48,6 +53,14 @@ public class MyLinkedListGrader {
 
         public String appendFeedback(int num, String desc) {
                 return "\\n** Test #" + num + ": " + desc + "...";
+        }
+
+        public PrintWriter getOutfile() {
+                return this.out;
+        }
+
+        public String getFeedback() {
+                return this.feedback;
         }
 	
 	public void doTest()
@@ -310,10 +323,26 @@ public class MyLinkedListGrader {
                 out.close();
         }
 	
+        // I honestly can't think of a better way to do this
+        @SuppressWarnings("deprecation")
 	public static void main(String args[])
 	{
-		MyLinkedListGrader grader = new MyLinkedListGrader();
-		grader.doTest();
+                MyLinkedListGrader grader = new MyLinkedListGrader();
+                Thread thread = new Thread(grader);
+                thread.start();
+                long endTimeMillis = System.currentTimeMillis() + 10000;
+                boolean infinite = false;
+                while (thread.isAlive()) {
+                        if (System.currentTimeMillis() > endTimeMillis) {
+                                thread.stop();
+                                infinite = true;
+                                break;
+                        }
+                }
+                if (infinite) {
+                        grader.getOutfile().println("{\"fractionalScore\": 0.0, \"feedback\": \"" + grader.getFeedback() + "\\nYour code created an infinite loop.\"}");
+                        grader.getOutfile().close();
+                }
 	}
 	
 	

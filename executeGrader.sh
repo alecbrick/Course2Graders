@@ -106,5 +106,9 @@ if [ ! $? -eq 0 ]; then
   exit 0
 fi
 
-java "$FILENAME" > extra.out
-cat output.out
+java "$FILENAME" > extra.out 2> err.out
+if [ -s output.out ]; then
+  cat output.out
+else
+  echo "{ \"fractionalScore\": 0.0, \"feedback\":\"Program terminated unexpectedly. Make sure you aren't calling System.exit().\" }"
+fi
