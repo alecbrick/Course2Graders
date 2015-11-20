@@ -2,6 +2,9 @@
 
 cd /grader
 
+MOD1_PART1_ID="temp"
+MOD1_PART2_ID="temp2"
+MOD2_PART1_ID="temp3"
 MOD2_PART2_ID="mEOEF"
 MOD3_PART1_1_ID="2xj63"
 MOD3_PART1_2_ID="In7Bo"
@@ -32,9 +35,29 @@ while [ $# -gt 1 ]
   shift
 done
 
-if [ "$PARTID" == "$MOD2_PART2_ID" ]; then
-  GRADER_DIRECTORY=mod2
-  FILENAME="document.DocumentBenchmarking"
+if [ "$PARTID" == "$MOD1_PART1_ID" ] || [ "$PARTID" == "$MOD1_PART2_ID" ]; then
+  if [ "$PARTID" == "$MOD1_PART1_ID" ]; then
+    GRADER_DIRECTORY=mod1/part1
+  else
+    GRADER_DIRECTORY=mod1/part2
+  fi
+  FILENAME="document.BasicDocumentGrader"
+  unzip /shared/submission/mod1.zip -d zipfile > /dev/null
+  cd zipfile
+  if [ ! -f "BasicDocument.java" ]; then
+    cd *
+  fi
+  cp * /grader/"$GRADER_DIRECTORY"/document/
+  cd /grader/"$GRADER_DIRECTORY"
+  javac -encoding ISO-8859-1 document/*.java 2>errorfile
+elif [ "$PARTID" == "$MOD2_PART1_ID" ] || [ "$PARTID" == "$MOD2_PART2_ID" ]; then
+  if [ "$PARTID" == "$MOD2_PART1_ID" ]; then
+    GRADER_DIRECTORY=mod2/part1
+    FILENAME="document.EfficientDocumentGrader"
+  else
+    GRADER_DIRECTORY=mod2/part2
+    FILENAME="document.DocumentBenchmarking"
+  fi
   unzip /shared/submission/mod2.zip -d zipfile > /dev/null
   cd zipfile
   if [ ! -f "EfficientDocument.java" ]; then
