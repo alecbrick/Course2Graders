@@ -18,7 +18,7 @@ public class DocumentBenchmarking {
 	public static final int TRIALS = 100;
 	
 	public static void main(String [] args) {
-		String s = "document/warAndPeace.txt";
+		String s = "data/warAndPeace.txt";
                 PrintWriter out;
                 try {
                     out = new PrintWriter("output.out");

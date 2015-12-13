@@ -2,6 +2,9 @@
 
 cd /grader
 
+MOD1_PART1_ID="zTjsC"
+MOD1_PART2_ID="QGf0N"
+MOD2_PART1_ID="y0VHn"
 MOD2_PART2_ID="mEOEF"
 MOD3_PART1_1_ID="2xj63"
 MOD3_PART1_2_ID="In7Bo"
@@ -32,12 +35,33 @@ while [ $# -gt 1 ]
   shift
 done
 
-if [ "$PARTID" == "$MOD2_PART2_ID" ]; then
+if [ "$PARTID" == "$MOD1_PART1_ID" ] || [ "$PARTID" == "$MOD1_PART2_ID" ]; then
+  GRADER_DIRECTORY=mod1
+  if [ "$PARTID" == "$MOD1_PART1_ID" ]; then
+    FILENAME="document.CountGrader"
+  else
+    FILENAME="document.FleschGrader"
+  fi
+  7z e -ozipfile /shared/submission/mod1.zip > /dev/null
+  cd zipfile
+  if [ ! -f "BasicDocument.java" ]; then
+    rm -r __MACOSX
+    cd *
+  fi
+  cp * /grader/"$GRADER_DIRECTORY"/document
+  cd /grader/"$GRADER_DIRECTORY"
+  javac -encoding ISO-8859-1 document/*.java 2>errorfile
+elif [ "$PARTID" == "$MOD2_PART1_ID" ] || [ "$PARTID" == "$MOD2_PART2_ID" ]; then
   GRADER_DIRECTORY=mod2
-  FILENAME="document.DocumentBenchmarking"
-  unzip /shared/submission/mod2.zip -d zipfile > /dev/null
+  if [ "$PARTID" == "$MOD2_PART1_ID" ]; then
+    FILENAME="document.EfficientGrader"
+  else
+    FILENAME="document.DocumentBenchmarking"
+  fi
+  7z e -ozipfile /shared/submission/mod2.zip > /dev/null
   cd zipfile
   if [ ! -f "EfficientDocument.java" ]; then
+    rm -r __MACOSX
     cd *
   fi
   cp * /grader/"$GRADER_DIRECTORY"/document/ 
@@ -65,9 +89,10 @@ elif [ "$PARTID" == "$MOD3_PART2_ID" ]; then
 elif [ "$PARTID" == "$MOD4_PART1_ID" ]; then
   GRADER_DIRECTORY=mod4/part1
   FILENAME="spelling.DictionaryGrader"
-  unzip /shared/submission/mod4part1.zip -d zipfile > /dev/null
+  7z e -ozipfile /shared/submission/mod4part1.zip > /dev/null
   cd zipfile
   if [ ! -f "DictionaryLL.java" ]; then
+    rm -r __MACOSX
     cd *
   fi
   cp * /grader/mod4/part1/spelling
@@ -76,8 +101,14 @@ elif [ "$PARTID" == "$MOD4_PART1_ID" ]; then
 elif [ "$PARTID" == "$MOD4_PART2_ID" ]; then
   GRADER_DIRECTORY=mod4/part2
   FILENAME="spelling.TrieGrader"
-  cp /shared/submission/AutoCompleteDictionaryTrie.java "$GRADER_DIRECTORY"/spelling
-  cd "$GRADER_DIRECTORY"
+  7z e -ozipfile /shared/submission/mod4part2.zip > /dev/null
+  cd zipfile
+  if [ ! -f "AutoCompleteDictionaryTrie.java" ]; then
+    rm -r __MACOSX
+    cd *
+  fi
+  cp * /grader/"$GRADER_DIRECTORY"/spelling
+  cd /grader/"$GRADER_DIRECTORY"
   javac -encoding ISO-8859-1 spelling/*.java 2>errorfile
 elif [ "$PARTID" == "$MOD5_PART1_ID" ] || [ "$PARTID" == "$MOD5_PART2_ID" ]; then
   if [ "$PARTID" == "$MOD5_PART1_ID" ]; then
