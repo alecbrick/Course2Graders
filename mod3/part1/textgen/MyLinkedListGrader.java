@@ -195,6 +195,9 @@ public class MyLinkedListGrader implements Runnable {
                         catch (IndexOutOfBoundsException e)
                         {
                                 feedback += "PASSED. ";
+                        } catch (Exception e) {
+                                feedback += "FAILED. Expected IndexOutOfBoundsException, got " + e + ". ";
+                                incorrect++;
                         }
                         
                         feedback += appendFeedback(12, "Testing upper bound of get");
@@ -207,7 +210,11 @@ public class MyLinkedListGrader implements Runnable {
                         catch (IndexOutOfBoundsException e)
                         {
                                 feedback += "PASSED. ";
+                        } catch (Exception e) {
+                                feedback += "FAILED. Expected IndexOutOfBoundsException, got " + e + ". ";
+                                incorrect++;
                         }
+
                         
                         feedback += appendFeedback(13, "Testing lower bound of set");
                         try
@@ -219,7 +226,11 @@ public class MyLinkedListGrader implements Runnable {
                         catch (IndexOutOfBoundsException e)
                         {
                                 feedback += "PASSED. ";
+                        } catch (Exception e) {
+                                feedback += "FAILED. Expected IndexOutOfBoundsException, got " + e + ". ";
+                                incorrect++;
                         }
+
                         
                         feedback += appendFeedback(14, "Testing upper bound of set");
                         try
@@ -231,7 +242,11 @@ public class MyLinkedListGrader implements Runnable {
                         catch (IndexOutOfBoundsException e)
                         {
                                 feedback += "PASSED. ";	
+                        } catch (Exception e) {
+                                feedback += "FAILED. Expected IndexOutOfBoundsException, got " + e + ". ";
+                                incorrect++;
                         }
+
                         
                         feedback += appendFeedback(15, "Using set with null value");
                         try
@@ -243,7 +258,11 @@ public class MyLinkedListGrader implements Runnable {
                         catch (NullPointerException e)
                         {
                                 feedback += "PASSED. ";
+                        } catch (Exception e) {
+                                feedback += "FAILED. Expected NullPointerException, got " + e + ". ";
+                                incorrect++;
                         }
+
                         
                         feedback += appendFeedback(16, "Testing lower bound of remove");
                         try
@@ -255,7 +274,11 @@ public class MyLinkedListGrader implements Runnable {
                         catch (IndexOutOfBoundsException e)
                         {
                                 feedback += "PASSED. ";
+                        } catch (Exception e) {
+                                feedback += "FAILED. Expected IndexOutOfBoundsException, got " + e + ". ";
+                                incorrect++;
                         }
+
                         
                         feedback += appendFeedback(17, "Testing upper bound of remove");
                         try
@@ -267,7 +290,11 @@ public class MyLinkedListGrader implements Runnable {
                         catch (IndexOutOfBoundsException e)
                         {
                                 feedback += "PASSED. ";
+                        } catch (Exception e) {
+                                feedback += "FAILED. Expected IndexOutOfBoundsException, got " + e + ". ";
+                                incorrect++;
                         }
+
 
                         feedback += appendFeedback(18, "Testing lower bound of add");
                         try
@@ -279,7 +306,11 @@ public class MyLinkedListGrader implements Runnable {
                         catch (IndexOutOfBoundsException e)
                         {
                                 feedback += "PASSED. ";
+                        } catch (Exception e) {
+                                feedback += "FAILED. Expected IndexOutOfBoundsException, got " + e + ". ";
+                                incorrect++;
                         }
+
 
                         feedback += appendFeedback(19, "Testing upper bound of add");
                         try
@@ -292,7 +323,11 @@ public class MyLinkedListGrader implements Runnable {
                         catch (IndexOutOfBoundsException e)
                         {
                                 feedback += "PASSED. ";
+                        } catch (Exception e) {
+                                feedback += "FAILED. Expected IndexOutOfBoundsException, got " + e + ". ";
+                                incorrect++;
                         }
+
 
                         feedback += appendFeedback(20, "Adding null element");
                         try
@@ -304,7 +339,11 @@ public class MyLinkedListGrader implements Runnable {
                         catch (NullPointerException e)
                         {
                                 feedback += "PASSED. ";
+                        } catch (Exception e) {
+                                feedback += "FAILED. Expected NullPointerException, got " + e + ". ";
+                                incorrect++;
                         }
+
                         tests += 10;
 
                         if (incorrect == 0) {

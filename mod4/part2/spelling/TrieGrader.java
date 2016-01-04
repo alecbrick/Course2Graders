@@ -258,8 +258,8 @@ public class TrieGrader {
 
         tests += 2;
 
-        auto = ac.predictCompletions("soup", 6);
         appendTestString(14, "6 completions requested, 0 expected...");
+        auto = ac.predictCompletions("soup", 6);
         if (auto.size() != 0) {
             feedback.append("FAILED. predictCompletions found words where no words should have been found ");
             incorrect++;
@@ -270,8 +270,8 @@ public class TrieGrader {
 
         tests++;
 
-        auto = ac.predictCompletions("dogg", 10);
         appendTestString(15, "10 completions requested, 6 expected...");
+        auto = ac.predictCompletions("dogg", 10);
         if (auto.size() != 6) {
             feedback.append("FAILED. predictCompletions returns " + auto.size() + " elements when it should return 6 ");
             incorrect++;
@@ -296,9 +296,9 @@ public class TrieGrader {
         }
         tests += 2;
 
+        appendTestString(17, "7 completions requested (test for size)...");
         auto = ac.predictCompletions("test", 7);
 
-        appendTestString(17, "7 completions requested (test for size)...");
         if(auto.size() != 7) {
             feedback.append("FAILED. predictCompletions returns " + auto.size() + " elements when it should return 7 ");
             incorrect++;
@@ -337,9 +337,9 @@ public class TrieGrader {
 
         
 
+        appendTestString(19, "Testing if list contains correct shorter words...");
         List<String> partialList = auto.subList(0, 5);
         
-        appendTestString(19, "Testing if list contains correct shorter words...");
         if(!partialList.containsAll(expected)) {
             feedback.append("FAILED. predictCompletion returns incorrect words ");
             incorrect++;

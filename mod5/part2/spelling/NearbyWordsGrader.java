@@ -4,16 +4,38 @@ import java.util.List;
 import java.util.ArrayList;
 import java.io.PrintWriter;
 
-public class NearbyWordsGrader {
+public class NearbyWordsGrader implements Runnable {
+    static PrintWriter out;
+
     public static String appendFeedback(int num, String desc) {
         return "\\n** Test #" + num + ": " + desc + "...";
     }
 
     public static void main(String args[]) {
+        NearbyWordsGrader grader = new NearbyWordsGrader();
+        Thread thread = new Thread(grader);
+        thread.start();
+        long endTimeMillis = System.currentTimeMillis() + 10000;
+        boolean infinite = false;
+        while(thread.isAlive()) {
+            if (System.currentTimeMillis() > endTimeMillis) {
+                thread.stop();
+                infinite = true;
+                break;
+            }
+        }
+
+        if (infinite) {
+            out.println("{\"fractionalScore\": 0.0, \"feedback\": \"Taking too long to run. Are you using a threshold of 1000?\"}");
+            out.close();
+        }
+    }
+
+    @Override
+    public void run() {
         int tests = 0;
         int incorrect = 0;
         String feedback = "";
-        PrintWriter out;
 
         try {
             out = new PrintWriter("output.out");

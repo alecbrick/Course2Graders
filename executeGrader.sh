@@ -2,9 +2,9 @@
 
 cd /grader
 
-MOD1_PART1_ID="temp"
-MOD1_PART2_ID="temp2"
-MOD2_PART1_ID="temp3"
+MOD1_PART1_ID="zTjsC"
+MOD1_PART2_ID="QGf0N"
+MOD2_PART1_ID="y0VHn"
 MOD2_PART2_ID="mEOEF"
 MOD3_PART1_1_ID="2xj63"
 MOD3_PART1_2_ID="In7Bo"
@@ -42,7 +42,7 @@ if [ "$PARTID" == "$MOD1_PART1_ID" ] || [ "$PARTID" == "$MOD1_PART2_ID" ]; then
     GRADER_DIRECTORY=mod1/part2
   fi
   FILENAME="document.BasicDocumentGrader"
-  unzip /shared/submission/mod1.zip -d zipfile > /dev/null
+  7z e -ozipfile /shared/submission/mod1.zip > /dev/null
   cd zipfile
   if [ ! -f "BasicDocument.java" ]; then
     cd *
@@ -58,9 +58,10 @@ elif [ "$PARTID" == "$MOD2_PART1_ID" ] || [ "$PARTID" == "$MOD2_PART2_ID" ]; the
     GRADER_DIRECTORY=mod2/part2
     FILENAME="document.DocumentBenchmarking"
   fi
-  unzip /shared/submission/mod2.zip -d zipfile > /dev/null
+  7z e -ozipfile /shared/submission/mod2.zip > /dev/null
   cd zipfile
   if [ ! -f "EfficientDocument.java" ]; then
+    rm -rf __MACOSX > /dev/null
     cd *
   fi
   cp * /grader/"$GRADER_DIRECTORY"/document/ 
@@ -88,7 +89,7 @@ elif [ "$PARTID" == "$MOD3_PART2_ID" ]; then
 elif [ "$PARTID" == "$MOD4_PART1_ID" ]; then
   GRADER_DIRECTORY=mod4/part1
   FILENAME="spelling.DictionaryGrader"
-  unzip /shared/submission/mod4part1.zip -d zipfile > /dev/null
+  7z e -ozipfile /shared/submission/mod4part1.zip > /dev/null
   cd zipfile
   if [ ! -f "DictionaryLL.java" ]; then
     cd *

@@ -38,9 +38,9 @@ public class WPTreeGrader {
         try {
             WPTree tree = new WPTree(new NearbyWords(new DictionaryHashSet("data/dict.txt")));
 
+            feedback += appendFeedback(1, "Testing short path");
             List<String> path = tree.findPath("pool", "spoon");
 
-            feedback += appendFeedback(1, "Testing short path");
             if (!(path != null && path.size() == 3 && path.get(0).equals("pool") && path.get(1).equals("spool") && path.get(2).equals("spoon"))) {
                 feedback += "FAILED. Your list was: " + printPath(path) + "; expected: pool, spool, spoon. ";
                 incorrect++;
@@ -50,9 +50,9 @@ public class WPTreeGrader {
             }
             tests++;
 
+            feedback += appendFeedback(2, "Testing long path");
             path = tree.findPath("stools", "moon");
 
-            feedback += appendFeedback(2, "Testing long path");
             if (!(path != null && path.size() == 9 &&
                 path.get(0).equals("stools") &&
                 path.get(1).equals("tools") &&
@@ -72,10 +72,10 @@ public class WPTreeGrader {
             }
             tests++;
 
+            feedback += appendFeedback(3, "Testing impossible path");
             path = tree.findPath("foal", "needless");
 
-            feedback += appendFeedback(3, "Testing impossible path");
-            if (path != null) {
+            if (path != null && path.size() != 0) {
                 feedback += "FAILED. Path found between 'foal' and 'needless' that should not exist: " + printPath(path) + ". ";
                 incorrect++;
             }
@@ -84,10 +84,10 @@ public class WPTreeGrader {
             }
             tests++;
 
+            feedback += appendFeedback(4, "Testing using a nonexistent word");
             path = tree.findPath("needle", "kitten");
             
-            feedback += appendFeedback(4, "Testing using a nonexistent word");
-            if (path != null) {
+            if (path != null && path.size() != 0) {
                 feedback += "FAILED. Path found involving nonexistent word: " + printPath(path) + ". ";
                 incorrect++;
             }
@@ -95,18 +95,19 @@ public class WPTreeGrader {
                 feedback += "PASSED. ";
             }
             tests++;
+
+            if (incorrect == 0) {
+                feedback = "All tests passed. Well done!\\n" + feedback;
+            } 
+            else {
+                feedback = "Some tests failed. Please check the following: \\n" + feedback;
+            }
+
+            out.println("{\"fractionalScore\": " + (float)(tests - incorrect) / tests + ", \"feedback\": \"" + feedback + "\"}");
+            out.close();
         } catch (Exception e) {
             out.println("{\"fractionalScore\": 0.0, \"feedback\": \"" + feedback + "\\nError during runtime: " + e + "\"}");
+            out.close();
         }
-
-        if (incorrect == 0) {
-            feedback = "All tests passed. Well done!\\n" + feedback;
-        } 
-        else {
-            feedback = "Some tests failed. Please check the following: \\n" + feedback;
-        }
-
-        out.println("{\"fractionalScore\": " + (float)(tests - incorrect) / tests + ", \"feedback\": \"" + feedback + "\"}");
-        out.close();
     }
 }

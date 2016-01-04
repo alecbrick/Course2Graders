@@ -4,6 +4,7 @@ RUN apt-get update
 RUN apt-get install -y zip
 RUN apt-get install -y junit4
 RUN apt-get install -y python
+RUN apt-get install -y p7zip-full
 
 RUN mkdir /shared
 RUN mkdir /shared/submission
