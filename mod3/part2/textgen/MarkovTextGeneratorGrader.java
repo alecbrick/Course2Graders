@@ -113,6 +113,7 @@ public class MarkovTextGeneratorGrader implements Runnable{
             gen.retrain(input);
             
             String res = gen.generateText(LENGTH);
+            System.out.println(res);
 
             String[] words = res.split("[\\s]+");
             if (res.split("[\\s]+").length != LENGTH) {
@@ -148,7 +149,7 @@ public class MarkovTextGeneratorGrader implements Runnable{
             for (String w : input.split(" ")) {
                 if (!wordCounts.containsKey(w)) {
                     found = false;
-                    feedback += "FAILED. Your generator doesn't produce every possible word. ";
+                    feedback += "FAILED. Your generator doesn't produce every possible word. Make sure you include punctuation and capitals.";
                     break;
                 }
             }

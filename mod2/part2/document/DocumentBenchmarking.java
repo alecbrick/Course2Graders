@@ -59,6 +59,7 @@ public class DocumentBenchmarking {
                                 startTime2 = System.nanoTime();
                                 for(int i = 0;  i< TRIALS; i++) {
                                         //Document b = new EfficientDocument(test);
+                                        System.out.println("Ayy");
                                         b.getFleschScore();
                                 }
                                 endTime2 = System.nanoTime();

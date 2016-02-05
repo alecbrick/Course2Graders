@@ -60,6 +60,11 @@ public class NearbyWords implements SpellingSuggest {
 		   }
 	   }
    }
+
+   public void subsitution(String s, List<String> currentList, boolean wordsOnly) {
+        substitutions(s, currentList, wordsOnly);
+   }
+
    public void deletions(String s, List<String> currentList, boolean wordsOnly) {
 	   //System.out.println("Deletions Char: Original Word " + s);
 	   for(int index = 0; index < s.length(); index++){

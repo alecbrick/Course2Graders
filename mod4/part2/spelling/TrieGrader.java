@@ -5,13 +5,14 @@ import java.lang.StringBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrieGrader {
+public class TrieGrader implements Runnable {
     private static final int LENGTH = 500;
 
-    private int incorrect = 0;
-    private int tests = 0;
+    private int correct = 0;
+    public static final int TESTS = 20;
     StringBuilder feedback; 
 
+    public PrintWriter out;
 
     public TrieGrader() {
         feedback = new StringBuilder();
@@ -22,47 +23,57 @@ public class TrieGrader {
         return "{\"fractionalScore\": " + score + ", \"feedback\": \"" + feedback + "\"}";
     }
 
-    
-    
-    public static void main(String[] args) {
-        TrieGrader g = new TrieGrader();
-
-        PrintWriter out;
+    @Override
+    public void run() {
         try {
             out = new PrintWriter("output.out");
         } catch (Exception e) {
             e.printStackTrace();
             return;
         }
-        
+
         try {
             AutoCompleteDictionaryTrie ac = new AutoCompleteDictionaryTrie();
-            
-            g.testAddWords(ac);
-
-            g.testWordsInOut(ac);
-
-            g.testPredictions(ac);
-
+            this.testAddWords(ac);
+            this.testWordsInOut(ac);
+            this.testPredictions(ac);
         } catch (Exception e) {
-            out.println(g.makeJson(0.0, g.getFeedback() + "Error during runtime: " + e ));
-            out.close();
+            feedback.insert(0, "Error during runtime: " + feedback);
             return;
+        }
+    }
+    
+    public static void main(String[] args) {
+        TrieGrader g = new TrieGrader();
+        Thread thread = new Thread(g);
+        thread.start();
+        long endTimeMillis = System.currentTimeMillis() + 10000;
+        boolean infinite = false;
+        while(thread.isAlive()) {
+            if (System.currentTimeMillis() > endTimeMillis) {
+                thread.stop();
+                infinite = true;
+                break;
+            }
         }
 
         StringBuilder feedback = g.getFeedback();
-        int tests = g.getTests();
-        int incorrect = g.getIncorrect();
+
+        if (infinite) {
+            feedback.append("\\nYour program entered an infinite loop. Check for places that might cause problems (potentially infinite while loops, infinite recursion, etc.) and try again.");
+        }
+
+        int correct = g.getCorrect();
             
-        if (incorrect == 0) {
+        if (correct == TESTS) {
             feedback.insert(0,"Congrats! All tests passed. :)\\n\\n");
         }
         else {
             feedback.insert(0, "Some tests failed. Please check tests marked FAILED: \\n\\n");
         }
             
-        out.println(g.makeJson((double)(tests - incorrect) / tests, feedback.toString()));
-        out.close();
+        g.out.println(g.makeJson((double)correct / TESTS, feedback.toString()));
+        g.out.close();
     }
 
 
@@ -71,13 +82,12 @@ public class TrieGrader {
         appendTestString(1, "Adding first word to dictionary...");
         if (!ac.addWord("dog")) {
             feedback.append("FAILED. Simple word add failed ");
-            incorrect++;
         }
         else {
             feedback.append("PASSED. ");
+            correct++;
         }
 
-        tests++;
 
         appendTestString(2,"Adding two more words and testing size...");
         ac.addWord("downhill");
@@ -85,12 +95,11 @@ public class TrieGrader {
         
         if(ac.size() != 3) {
             feedback.append("FAILED. Incorrect size after adding three words. ");
-            incorrect++;
         }
         else {
             feedback.append("PASSED. ");
+            correct++;
         }
-        tests++;
 
 
         appendTestString(3, "Adding more words to dictionary trie (testing size after insertions)...");
@@ -119,13 +128,12 @@ public class TrieGrader {
 
         if (ac.size() != 24) {
             feedback.append("FAILED. Incorrect size after adding many words: expected 24, got " + ac.size() + " ");
-            incorrect++;
         }
         else {
             feedback.append("PASSED. ");
+            correct++;
         }
 
-        tests++;
 
         // get current size before trying to add duplicate word
         int expectedSize = ac.size();
@@ -133,23 +141,21 @@ public class TrieGrader {
         appendTestString(4,"Adding duplicate word...");
         if(ac.addWord("dog")) {
             feedback.append("FAILED. addWord returned true when adding duplicate word ");
-            incorrect++;
         }
         else {
             feedback.append("PASSED. ");
+            correct++;
         }
-        tests++;
 
         appendTestString(5, "Checking size after try to add duplicate word...");
         if(ac.size() != expectedSize) {
             feedback.append("FAILED. Incorrect size after trying to add duplicate word: expected " + expectedSize + ", got " + ac.size() + " ");
-            incorrect++;
         }
         else {
             feedback.append("PASSED. ");
+            correct++;
         }
 
-        tests++;
 
     }
 
@@ -159,75 +165,69 @@ public class TrieGrader {
         appendTestString(6,"Checking empty string...");
         // test empty string
         if(ac.isWord("")) {
-            incorrect++;
             feedback.append("FAILED. Empty string found in dictionary. ");
         }
         else {
             feedback.append("PASSED. ");
+            correct++;
         }
 
-        tests++;
 
         appendTestString(7, "Checking for word in dictionary...");
         if (!ac.isWord("doggoes")) {
             feedback.append("FAILED. Can't find word added in dictionary");
-            incorrect++;
         }
         else {
             feedback.append("PASSED. ");
+            correct++;
         }
 
 
-        tests++;
 
 
 
         // test word only missing last letter
         appendTestString(8, "Testing word only missing last letter...");
         if(ac.isWord("downhil")) {
-            incorrect++;
             feedback.append("FAILED. Make sure you are testing for the entire word in isWord. i.e. 'downhil' is not valid, 'downhill' is ");
         }
         else {
             feedback.append("PASSED. ");
+            correct++;
         }
 
-        tests++;
 
         //test word with added letter
         appendTestString(9, "Testing word with one extra letter...");
         if(ac.isWord("downhille")) {
-            incorrect++;
             feedback.append("FAILED. isWord returns true when word valid except for additional last letter. i.e. 'downhille' is not valid, 'downhill' is. ");
         }
         else {
             feedback.append("PASSED. ");
+            correct++;
         }
 
-        tests++;
 
         
         appendTestString(10, "Testing for more words in dictionary...");
         if(!ac.isWord("test") || !ac.isWord("testcases") || !ac.isWord("testone")) {
-            incorrect++;
             feedback.append("FAILED. isWord returns false when passed. ");
         }
         else {
             feedback.append("PASSED. ");
+            correct++;
         }
 
-        tests++;
 
         appendTestString(11, "Testing word with capital letters..."); 
         if(!ac.isWord("TeSt")) {
-            incorrect++;
             feedback.append("FAILED. Make sure you are converting to lowercase when adding and checking words ");
         }
         else {
             feedback.append("PASSED. ");
+            correct++;
         }
 
-        tests++;
         
             
 
@@ -241,43 +241,41 @@ public class TrieGrader {
         appendTestString(12, "3 completions requested...");
         if (!(auto.contains("dog") && auto.contains("dogg") && auto.contains("doge"))) {
             feedback.append("FAILED. predictCompletions doesn't return the correct completions - make sure it returns the shortest words ");
-            incorrect++;
         }
         else {
             feedback.append("PASSED. ");
+            correct++;
         }
 
         appendTestString(13,"Testing size of list...");
         if (auto.size() != 3) {
             feedback.append("FAILED. predictCompletions returns " + auto.size() + " elements when it should return 3 ");
-            incorrect++;
         }
         else {
             feedback.append("PASSED. ");
+            correct++;
         }
 
-        tests += 2;
 
         appendTestString(14, "6 completions requested, 0 expected...");
         auto = ac.predictCompletions("soup", 6);
         if (auto.size() != 0) {
             feedback.append("FAILED. predictCompletions found words where no words should have been found ");
-            incorrect++;
         }
         else {
             feedback.append("PASSED. ");
+            correct++;
         }
 
-        tests++;
 
         appendTestString(15, "10 completions requested, 6 expected...");
         auto = ac.predictCompletions("dogg", 10);
         if (auto.size() != 6) {
             feedback.append("FAILED. predictCompletions returns " + auto.size() + " elements when it should return 6 ");
-            incorrect++;
         }
         else {
             feedback.append("PASSED. ");
+            correct++;
         }
         
         appendTestString(16, "Testing for correctness of 6 words...");
@@ -289,25 +287,23 @@ public class TrieGrader {
         expected.add("doggies");
         if(!auto.containsAll(expected)) {
             feedback.append("FAILED. predictCompletions does not return expected words ");
-            incorrect++;
         }
         else {
             feedback.append("PASSED. ");
+            correct++;
         }
-        tests += 2;
 
         appendTestString(17, "7 completions requested (test for size)...");
         auto = ac.predictCompletions("test", 7);
 
         if(auto.size() != 7) {
             feedback.append("FAILED. predictCompletions returns " + auto.size() + " elements when it should return 7 ");
-            incorrect++;
         }
         else {
             feedback.append("PASSED. ");
+            correct++;
         }
 
-        tests++;
 
         expected.clear();
         expected.add("test");
@@ -322,7 +318,6 @@ public class TrieGrader {
 
             if(auto.get(i+1).length() < auto.get(i).length()) {
                 feedback.append("FAILED. String at index " + (i+1) + " is shorter than string at index " + i + " ");
-                incorrect++;
                 failed = true;
                 break;
             }
@@ -331,57 +326,58 @@ public class TrieGrader {
         
         if(!failed) {
             feedback.append("PASSED. ");
+            correct++;
         }
 
-        tests++;
 
-        
+        List<String> partialList;
+
 
         appendTestString(19, "Testing if list contains correct shorter words...");
-        List<String> partialList = auto.subList(0, 5);
-        
-        if(!partialList.containsAll(expected)) {
-            feedback.append("FAILED. predictCompletion returns incorrect words ");
-            incorrect++;
-        }  
-        else {
-            feedback.append("PASSED. ");
+        if (auto.size() < 5) {
+            feedback.append("FAILED. List does not contain 5 words.");
+        } else {
+            partialList = auto.subList(0, 5);
+            
+            if(!partialList.containsAll(expected)) {
+                feedback.append("FAILED. predictCompletion returns incorrect words ");
+            } else {
+                feedback.append("PASSED. ");
+                correct++;
+            }
         }
 
-        tests++;
 
 
         appendTestString(20, "Testing for remaining words...");
-        partialList = auto.subList(5, auto.size());
+        if (auto.size() <= 5) {
+            feedback.append("FAILED. List must contain more than 5 elements to pass.");
+        } else {
+            partialList = auto.subList(5, auto.size());
 
-        int count = 0;
+            int count = 0;
 
-        count = partialList.contains("testone") ? ++count:count ;
-        count = partialList.contains("testine") ? ++count:count;
-        count = partialList.contains("testell") ? ++count:count;
-        count = partialList.contains("testing") ? ++count:count;
+            count = partialList.contains("testone") ? ++count:count ;
+            count = partialList.contains("testine") ? ++count:count;
+            count = partialList.contains("testell") ? ++count:count;
+            count = partialList.contains("testing") ? ++count:count;
 
-        if(count != 2) {
-            feedback.append("FAILED. Last (longer) words in list not as expected ");
+            if(count != 2) {
+                feedback.append("FAILED. Last (longer) words in list not as expected. ");
+            }
+            else {
+                feedback.append("PASSED. ");
+                correct++;
+            }
         }
-        else {
-            feedback.append("PASSED. ");
-        }
-       
-        tests++;
-
-            
     }
 
     private void appendTestString(int num, String description) {
         feedback.append("\\n** Test #" + num + ": " + description);
     }
 
-    private int getIncorrect() {
-        return this.incorrect;
-    }
-    private int getTests() {
-        return this.tests;
+    private int getCorrect() {
+        return this.correct;
     }
     private StringBuilder getFeedback() {
         return this.feedback;
