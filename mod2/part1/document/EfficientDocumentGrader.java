@@ -92,7 +92,7 @@ public class EfficientDocumentGrader {
                 feedback = "Some tests failed. Please check the following: \\n\\n" + feedback;
                 score = 0.0;
             }
-            out.println("{\"fractionalScore\": " + score + ", \"feedback\": " + feedback + "\"}");
+            out.println("{\"fractionalScore\": " + score + ", \"feedback\": \"" + feedback + "\"}");
             out.close();
         } catch (Exception e) {
             out.println("{\"fractionalScore\": 0.0, \"feedback\": \"Error during runtime: " + e + "\"}");
