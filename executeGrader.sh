@@ -18,8 +18,15 @@ MOD5_PART3_ID="16fSM"
 do_unzip () {
     7z e -ozipfile /shared/submission/$1 > /dev/null
     if [ ! $? -eq 0 ]; then
-        echo "{\"fractionalScore\": 0.0, \"feedback\": \"Zipfile unreadable. The grader does not support certain types of compression, most notably .rar files; please use a different type of compression.\"}"
-        exit 0
+        if [ $2 = true ]; then
+            echo "{\"fractionalScore\": 0.0, \"feedback\": \"Zipfile unreadable. The grader does not support certain types of compression, most notably .rar files; please use a different type of compression.\"}"
+            exit 0
+        fi
+    else
+        if [ $2 = false ]; then
+            echo "{\"fractionalScore\": 0.0, \"feedback\": \"Incorrect submission format - please check the submission instructions and try again.\"}"
+            exit 0
+        fi
     fi
 }
 
@@ -45,12 +52,12 @@ done
 
 if [ "$PARTID" == "$MOD1_PART1_ID" ] || [ "$PARTID" == "$MOD1_PART2_ID" ]; then
   if [ "$PARTID" == "$MOD1_PART1_ID" ]; then
-    GRADER_DIRECTORY=mod1/part1
+    FILENAME="document.CountGrader"
   else
-    GRADER_DIRECTORY=mod1/part2
+    FILENAME="document.FleschGrader"
   fi
-  FILENAME="document.BasicDocumentGrader"
-  do_unzip mod1.zip
+  GRADER_DIRECTORY=mod1
+  do_unzip mod1.zip true
   cd zipfile
   if [ ! -f "BasicDocument.java" ]; then
     cd *
@@ -67,7 +74,7 @@ elif [ "$PARTID" == "$MOD2_PART1_ID" ] || [ "$PARTID" == "$MOD2_PART2_ID" ]; the
     GRADER_DIRECTORY=mod2/part2
     FILENAME="document.DocumentBenchmarking"
   fi
-  do_unzip mod2.zip
+  do_unzip mod2.zip true
   cd zipfile
   if [ ! -f "EfficientDocument.java" ]; then
     rm -rf __MACOSX > /dev/null
@@ -79,12 +86,14 @@ elif [ "$PARTID" == "$MOD2_PART1_ID" ] || [ "$PARTID" == "$MOD2_PART2_ID" ]; the
 elif [ "$PARTID" == "$MOD3_PART1_1_ID" ]; then
   GRADER_DIRECTORY=mod3/part1
   FILENAME="textgen.MyLinkedListGrader"
+  do_unzip MyLinkedList.java false
   cp /shared/submission/MyLinkedList.java "$GRADER_DIRECTORY"/textgen
   cd "$GRADER_DIRECTORY"
   javac -encoding ISO-8859-1 -cp .:/usr/share/java/junit4.jar textgen/*.java 2>errorfile
 elif [ "$PARTID" == "$MOD3_PART1_2_ID" ]; then
   GRADER_DIRECTORY=mod3/part1
   FILENAME="mod3part1.py"
+  do_unzip MyLinkedListTester.java false
   cp /shared/submission/MyLinkedListTester.java "$GRADER_DIRECTORY"/textgen
   cd "$GRADER_DIRECTORY"
   python "$FILENAME"
@@ -92,13 +101,14 @@ elif [ "$PARTID" == "$MOD3_PART1_2_ID" ]; then
 elif [ "$PARTID" == "$MOD3_PART2_ID" ]; then
   GRADER_DIRECTORY=mod3/part2
   FILENAME="textgen.MarkovTextGeneratorGrader"
+  do_unzip MarkovTextGeneratorLoL.java false
   cp /shared/submission/MarkovTextGeneratorLoL.java "$GRADER_DIRECTORY"/textgen
   cd "$GRADER_DIRECTORY"
   javac -encoding ISO-8859-1 textgen/*.java 2>errorfile
 elif [ "$PARTID" == "$MOD4_PART1_ID" ]; then
   GRADER_DIRECTORY=mod4/part1
   FILENAME="spelling.DictionaryGrader"
-  do_unzip mod4part1.zip
+  do_unzip mod4part1.zip true
   cd zipfile
   if [ ! -f "DictionaryLL.java" ]; then
     rm -rf __MACOSX > /dev/null
@@ -110,7 +120,7 @@ elif [ "$PARTID" == "$MOD4_PART1_ID" ]; then
 elif [ "$PARTID" == "$MOD4_PART2_ID" ]; then
   GRADER_DIRECTORY=mod4/part2
   FILENAME="spelling.TrieGrader"
-  do_unzip mod4part2.zip
+  do_unzip mod4part2.zip true
   cd zipfile
   if [ ! -f "AutoCompleteDictionaryTrie.java" ]; then
     rm -rf __MACOSX > /dev/null
@@ -126,12 +136,14 @@ elif [ "$PARTID" == "$MOD5_PART1_ID" ] || [ "$PARTID" == "$MOD5_PART2_ID" ]; the
     GRADER_DIRECTORY=mod5/part2
   fi
   FILENAME="spelling.NearbyWordsGrader"
+  do_unzip NearbyWords.java false
   cp /shared/submission/NearbyWords.java "$GRADER_DIRECTORY"/spelling
   cd "$GRADER_DIRECTORY"
   javac -encoding ISO-8859-1 spelling/*.java 2>errorfile
 elif [ "$PARTID" == "$MOD5_PART3_ID" ]; then
   GRADER_DIRECTORY=mod5/part3
   FILENAME="spelling.WPTreeGrader"
+  do_unzip WPTree.java false
   cp /shared/submission/WPTree.java "$GRADER_DIRECTORY"/spelling
   cd "$GRADER_DIRECTORY"
   javac -encoding ISO-8859-1 spelling/*.java 2>errorfile

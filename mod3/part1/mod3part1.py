@@ -27,7 +27,7 @@ def main():
     for i in range(1, 13):
         s, err = runTest("MyLinkedList%s.java" % i)
         if s == -1:
-            print "{\"fractionalScore\": 0.0, \"feedback\": \"Uncaught runtime exception: %s\"}" % err
+            print "{\"fractionalScore\": 0.0, \"feedback\": \"Uncaught runtime exception: %s\"}" % err.replace("\n", "\\n").replace("\"", "\\\"").replace("\t", "\\t")
             return
         elif s == -2:
             print "{\"fractionalScore\": 0.0, \"feedback\": \"Error during compilation: %s\"}" % err.replace("\n", "\\n").replace("\"", "\\\"").replace("\t", "\\t")

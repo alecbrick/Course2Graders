@@ -38,7 +38,7 @@ public class TrieGrader implements Runnable {
             this.testWordsInOut(ac);
             this.testPredictions(ac);
         } catch (Exception e) {
-            feedback.insert(0, "Error during runtime: " + feedback);
+            feedback.append("\\nError during runtime: " + e);
             return;
         }
     }

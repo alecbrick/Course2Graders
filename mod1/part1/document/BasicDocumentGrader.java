@@ -28,7 +28,7 @@ public class BasicDocumentGrader {
         }
 
         try {
-            BufferedReader br = new BufferedReader(new FileReader("testcases.txt"));
+            BufferedReader br = new BufferedReader(new FileReader("data/testcases.txt"));
             feedback += appendFeedback(1, "Testing first string");
             
             BasicDocument doc = new BasicDocument(br.readLine());
@@ -103,7 +103,7 @@ public class BasicDocumentGrader {
                 feedback = "Some tests failed. Please check the following: \\n\\n" + feedback;
                 score = 0.0;
             }
-            out.println("{\"fractionalScore\": " + score + ", \"feedback\": " + feedback + "\"}");
+            out.println("{\"fractionalScore\": " + score + ", \"feedback\": \"" + feedback + "\"}");
             out.close();
         } catch (Exception e) {
             out.println("{\"fractionalScore\": 0.0, \"feedback\": \"Error during runtime: " + e + "\"}");
